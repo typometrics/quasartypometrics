@@ -93,7 +93,7 @@ module.exports = function (/* ctx */) {
       importStrategy: 'auto',
 
       // Quasar plugins
-      plugins: []
+      plugins: ['Notify']
     },
 
     // animations: 'all', // --- includes all animations
@@ -110,9 +110,9 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Quasareditor',
-        short_name: 'Quasareditor',
-        description: 'A Quasar Framework app',
+        name: 'Cloeditor',
+        short_name: 'Cloeditor',
+        description: 'An intelligent Patent Editor',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -177,7 +177,7 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'quasareditor'
+        appId: 'cloeditor'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration

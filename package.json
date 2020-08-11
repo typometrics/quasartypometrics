@@ -1,8 +1,8 @@
 {
-  "name": "quasareditor",
+  "name": "cloeditor",
   "version": "0.0.1",
   "description": "A Quasar Framework app",
-  "productName": "Quasareditor",
+  "productName": "Cloeditor",
   "author": "kimgerdes <kim@gerdes.fr>",
   "private": true,
   "scripts": {

@@ -1,4 +1,4 @@
-# Quasareditor (quasareditor)
+# Cloeditor (cloeditor)
 
 A Quasar Framework app
 
