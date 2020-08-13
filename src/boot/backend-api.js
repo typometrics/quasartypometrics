@@ -19,13 +19,16 @@ axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
 //     timeout: 5000,
 //     withCredentials: false
 // });
-axios.defaults.baseURL = 'http://127.0.0.1:8000/algodraftapp/';
+// axios.defaults.baseURL = 'http://127.0.0.1:8000/algodraftapp/';
+axios.defaults.baseURL = ( process.env.DEV ) ? 'http://127.0.0.1:8000'  : 'https://cloeditor.elizia.net:8000';
+
 const API = axios.create({
     // baseURL: "http://127.0.0.1:8000/algodraftapp/",
     // baseURL: "http://localhost:8000",
-    baseURL: "http://127.0.0.1:8000/algodraftapp/",
+//     baseURL: "http://127.0.0.1:8000/algodraftapp/",
+    baseURL:  ( process.env.DEV ) ? 'http://127.0.0.1:8000/algodraftapp/'  : 'https://cloeditor.elizia.net:8000/algodraftapp/',
     
-    timeout: 5000
+    timeout: 60000
 })
 
 const header = {
