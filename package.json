@@ -1,8 +1,8 @@
 {
-  "name": "cloeditor",
+  "name": "typometrics",
   "version": "0.0.1",
   "description": "A Quasar Framework app",
-  "productName": "Cloeditor",
+  "productName": "Typometrics",
   "author": "kimgerdes <kim@gerdes.fr>",
   "private": true,
   "scripts": {
@@ -12,6 +12,8 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "axios": "^0.18.1",
+    "chart.js": "^2.9.3",
+    "chartjs-plugin-datalabels": "^0.7.0",
     "core-js": "^3.6.5",
     "quasar": "^1.0.0",
     "vue-i18n": "^8.0.0"

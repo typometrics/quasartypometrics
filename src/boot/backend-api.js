@@ -15,18 +15,18 @@ axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
 //     // baseURL: 'https://arboratorgrew.ilpga.fr:8888/login',
 //     // baseURL: process.env.API + `/login`,
 //     // baseURL: ( process.env.DEV ) ? "/login"  : process.env.API+"/login",
-//     baseURL: "http://127.0.0.1:8000/algodraftapp/",
+//     baseURL: "http://127.0.0.1:8000/typometricsapp/",
 //     timeout: 5000,
 //     withCredentials: false
 // });
-// axios.defaults.baseURL = 'http://127.0.0.1:8000/algodraftapp/';
-axios.defaults.baseURL = ( process.env.DEV ) ? 'http://127.0.0.1:8000'  : 'https://cloeditor.elizia.net:8000';
+// axios.defaults.baseURL = 'http://127.0.0.1:8000/typometricsapp/';
+axios.defaults.baseURL = ( process.env.DEV ) ? 'http://127.0.0.1:8000'  : 'https://typometrics.elizia.net:8000';
 
 const API = axios.create({
-    // baseURL: "http://127.0.0.1:8000/algodraftapp/",
+    // baseURL: "http://127.0.0.1:8000/typometricsapp/",
     // baseURL: "http://localhost:8000",
-//     baseURL: "http://127.0.0.1:8000/algodraftapp/",
-    baseURL:  ( process.env.DEV ) ? 'http://127.0.0.1:8000/algodraftapp/'  : 'https://cloeditor.elizia.net:8000/algodraftapp/',
+//     baseURL: "http://127.0.0.1:8000/typometricsapp/",
+    baseURL:  ( process.env.DEV ) ? 'http://127.0.0.1:8000/typometricsapp/'  : 'https://typometrics.elizia.net:8000/typometricsapp/',
     
     timeout: 60000
 })
@@ -43,181 +43,18 @@ const header = {
 
 
 export default {
-    postClaims(data){ // new from kim JSON.stringify(user)
-        // console.log(7777,xdata)
-        // let data = {'cats':456};
-        return API.post('draft/', data, header);
+    getData(data){ // new from kim JSON.stringify(user)
+        return API.post('typo/', data) //, header);
+    },
+    getOptions(data){ // new from kim JSON.stringify(user)
+        // console.log(999, data)
+        return API.post('typoptions/', data) //, header);
+    },
+    getTypes(data){ // new from kim
+        return API.get('types/', data); //, header);
     },
 
 
-    getProjects(){
-        return API.get('home/projects');
-    },
-    getUsers(){
-        return API.get('admin/users');
-    },
-    getUsersTreeFrom(projectname){
-        return API.get('projects/'+projectname+'/treesfrom');
-    },
-    getProjectInfos(projectname){ // this one is slow, asks grew
-        return API.get('projects/'+projectname);
-    },
-    getProjectSettings(projectname){ // this one is fast, only flask, also some more information, such as is_open
-        return API.get('projects/'+projectname+'/settings/infos');
-    },
-    updateProjectSettings(projectname, projectconfig){ // new from kim JSON.stringify(user)
-        return API.post('projects/'+projectname+'/settings/update', projectconfig);
-    },
-    // addProjectCatLabel(projectname, cat){
-    //     return API.post('projects/'+projectname+'/config/cat/add', {'cat': cat});
-    // },
-    // removeProjectCatLabel(projectname, cat){
-    //     return API.post('projects/'+projectname+'/config/cat/delete', {'cat': cat});
-    // },
-    // addProjectStock(projectname){
-    //     return API.post('projects/'+projectname+'/config/stock/add', {'stockid':'dummy'});
-    // },
-    // removeProjectStock(projectname, stockid){
-    //     return API.post('projects/'+projectname+'/config/stock/delete', {'stockid':stockid})
-    // },
-    // addProjectStockLabel(projectname, stockid, label){
-    //     return API.post('projects/'+projectname+'/config/label/add', {'stockid':stockid, 'label':label});
-    // },
-    // removeProjectStockLabel(projectname, id, stockid, label){
-    //     return API.post('projects/'+projectname+'/config/label/delete', {'labelid': id,'stockid':stockid, 'label':label});
-    // },
-    // saveTxtCats(projectname, txtCats){
-    //     let data = {'cats':txtCats};
-    //     return API.post('projects/'+projectname+'/config/txtcats', data);
-    // },
-    // saveTxtLabels(projectname, txtLabels){
-    //     let data = {'labels':txtLabels};
-    //     return API.post('projects/'+projectname+'/config/txtlabels', data);
-    // },
-    setProjectUserRole(projectname, targetrole, userid){
-        let data = {'user_id':userid};
-        return API.post('projects/'+projectname+'/'+targetrole+'/add', data);
-    },
-    removeProjectUserRole(projectname, targetrole, userid){
-        let data = {'user_id':userid};
-        return API.post('projects/'+projectname+'/'+targetrole+'/remove', data);
-    },
-    addDefaultUserTree(projectname, user){
-        let data = {'user':JSON.stringify(user)};
-        return API.post('projects/'+projectname+'/defaultusertrees/add', data);
-    },
-    removeDefaultUserTree(projectname, dutid){
-        let data = {'dut_id':dutid};
-        return API.post('projects/'+projectname+'/defaultusertrees/remove', data);
-    },
-    getSampleContent(projectname, samplename){
-        return API.get('projects/'+projectname+'/sample/'+samplename);
-    },
-    deleteProject(projectname){
-        return API.delete('projects/'+projectname+'/delete');
-    },
-    deleteSample(projectname, samplename){
-        return API.delete('projects/'+projectname+'/sample/'+samplename);
-    },
-    uploadSample(projectname, data){
-        console.log(data);
-        return API.post('projects/' + projectname +'/upload', data);
-    },
-    addSampleAnnotator(username, projectname, samplename){
-        let data = {'username':username, 'projectname':projectname, 'samplename':samplename};
-        return API.post('projects/'+projectname+'/sample/annotator/add', data);
-    },
-    removeSampleAnnotator(username, projectname, samplename){
-        let data = {'username':username, 'projectname':projectname, 'samplename':samplename};
-        return API.post('projects/'+projectname+'/sample/annotator/remove', data);
-    },
-    addSampleValidator(username, projectname, samplename){
-        let data = {'username':username, 'projectname':projectname, 'samplename':samplename};
-        return API.post('projects/'+projectname+'/sample/validator/add', data);
-    },
-    removeSampleValidator(username, projectname, samplename){
-        let data = {'username':username, 'projectname':projectname, 'samplename':samplename};
-        return API.post('projects/'+projectname+'/sample/validator/remove', data);
-    },
-    addSampleSuperValidator(username, projectname, samplename){
-        let data = {'username':username, 'projectname':projectname, 'samplename':samplename};
-        return API.post('projects/'+projectname+'/sample/supervalidator/add', data);
-    },
-    removeSampleSuperValidator(username, projectname, samplename){
-        let data = {'username':username, 'projectname':projectname, 'samplename':samplename};
-        return API.post('projects/'+projectname+'/sample/supervalidator/remove', data);
-    },
-    addSampleProf(username, projectname, samplename){
-        let data = {'username':username, 'projectname':projectname, 'samplename':samplename};
-        return API.post('projects/'+projectname+'/sample/prof/add', data);
-    },
-    removeSampleProf(username, projectname, samplename){
-        let data = {'username':username, 'projectname':projectname, 'samplename':samplename};
-        return API.post('projects/'+projectname+'/sample/prof/remove', data);
-    },
-    modifyOpenProject(projectname, value){
-        return API.post('projects/'+projectname+'/openproject', {'value':value});
-    },
-    modifyShowAllTrees(projectname, value){
-        return API.post('projects/'+projectname+'/showalltrees', {'value':value});
-    },
-    modifyPrivate(projectname, value){
-        return API.post('projects/'+projectname+'/private', {'value':value});
-    },
-    modifyDescription(projectname, value){
-        return API.post('projects/'+projectname+'/description', {'value':value});
-    },
-    uploadProjectImage(projectname, form){
-        return API.post('projects/'+projectname+'/image', form);
-    },
-    exportSamplesZip(samplenames, projectname){
-        let data = { 'samples': samplenames };
-        return API.post('projects/'+projectname+'/export/zip', data, {responseType: 'arraybuffer'});
-    },
-    auth(provider){
-        // return fetch('http://127.0.0.1:5000/login/'+provider, { mode: 'cors', method: 'GET', 
-        //     //body: new URLSearchParams(data).toString(),
-        //     headers: {'Accept': 'application/json', 'Content-Type': "application/x-www-form-urlencoded" }
-        // }).then((res) => res.json())
-        return AUTH.get(provider);
-    },
-    logout(){
-        return axios.get('/logout');
-    },
-    whoAmI(){
-        var sessionId = VueCookies.get("session");
-        var session = {id: sessionId}
-        return AUTH.post('userinfos', session);
-    },
-    createProject(data){
-        return API.post('projects/create', data)
-    },
-    createInitializedProject( projectName, data ){
-        return API.post('projects/'+projectName+'/create/upload', data);
-    },
-    searchProject( projectname, query){
-        return API.post('projects/'+projectname+'/search', query);
-    },
-    tryRuleProject( projectname, query){
-        return API.post('projects/'+projectname+'/tryRule', query);
-    },
-    searchSample( projectname, samplename, query) {
-        return API.post('projects/'+projectname+'/sample/'+samplename+'/search', query)
-    },
-    saveTrees(projectname, data) {
-        return API.post('projects/' + projectname + '/saveTrees', data);
-    },
-    getRelationTable(projectname, data) {
-        return API.post('projects/' + projectname + '/relation_table', data);
-    },
-    commit(projectname, data) {
-        return API.post('projects/' + projectname + '/commit', data);
-    },
-    pull(projectname, data) {
-        return API.post('projects/' + projectname + '/pull', data);
-    },
-    getLexicon(projectname, data) {
-        return API.post('projects/' + projectname + '/getLexicon', data);
-    }
+
 
 }

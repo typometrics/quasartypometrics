@@ -12,10 +12,10 @@
         />
 
         <q-toolbar-title>
-          Cloeditor
+          typometrics
         </q-toolbar-title>
 
-        <div>Cloeditor v{{ 0.1 }}</div>
+        <div>typometrics v{{ 0.1 }}</div>
       </q-toolbar>
     </q-header>
 <!-- show-if-above -->

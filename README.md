@@ -1,4 +1,4 @@
-# Cloeditor (cloeditor)
+# Typometrics (typometrics)
 
 A Quasar Framework app
 

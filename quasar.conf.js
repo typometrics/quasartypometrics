@@ -110,9 +110,9 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Cloeditor',
-        short_name: 'Cloeditor',
-        description: 'An intelligent Patent Editor',
+        name: 'Typometrics',
+        short_name: 'Typometrics',
+        description: 'typometricopia',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -177,7 +177,7 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'cloeditor'
+        appId: 'typometrics'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
