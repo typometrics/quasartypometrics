@@ -12,7 +12,7 @@ npm install
 quasar dev
 ```
 
-### Lint the files
+### if you like it: Lint the files
 ```bash
 npm run lint
 ```
@@ -24,3 +24,7 @@ quasar build
 
 ### Customize the configuration
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+
+The server has to point to 	/home/typometrics/quasartypometrics/dist/spa;
+
+check deployment/djangocloeditor for an nginx configuration
