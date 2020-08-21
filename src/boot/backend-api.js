@@ -20,13 +20,13 @@ axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
 //     withCredentials: false
 // });
 // axios.defaults.baseURL = 'http://127.0.0.1:8000/typometricsapp/';
-axios.defaults.baseURL = ( process.env.DEV ) ? 'http://127.0.0.1:8000'  : 'https://typometrics.elizia.net:8000';
+axios.defaults.baseURL = ( process.env.DEV ) ? 'http://127.0.0.1:8000'  : 'https://typometrics.elizia.net:7000';
 
 const API = axios.create({
     // baseURL: "http://127.0.0.1:8000/typometricsapp/",
     // baseURL: "http://localhost:8000",
 //     baseURL: "http://127.0.0.1:8000/typometricsapp/",
-    baseURL:  ( process.env.DEV ) ? 'http://127.0.0.1:8000/typometricsapp/'  : 'https://typometrics.elizia.net:8000/typometricsapp/',
+    baseURL:  ( process.env.DEV ) ? 'http://127.0.0.1:8000/typometricsapp/'  : 'https://typometrics.elizia.net:7000/typometricsapp/',
     
     timeout: 60000
 })
