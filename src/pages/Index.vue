@@ -2,16 +2,27 @@
   <q-page class="full-width row no-wrap justify-around items-start content-between q-col-gutter-lg" >
     <div class="">
       <div class="col-4"  >
+		  
           <bubble-chart ref="bubblechart" class="col-2" :chartdata="chartdata" :displayoptions="displayoptions" ></bubble-chart>
       </div>
     </div>
 
     <div class="col-2 self-center">
+		<q-spinner color="primary" size="10em" :class="{ hidden : !loading }" :thickness="10"/>
       <div class="column q-col-gutter-lg">
           <!-- <div class="q-pa-md"> -->
         <!-- <q-form @submit="showIt" class="q-gutter-md"> -->
         <q-form class="q-gutter-md">
           <div class="column q-gutter-lg  justify-center">
+                  <q-space />
+            <!-- <div class="col-2">
+              <q-select
+                v-model="scheme"
+                :options="schemeoptions"
+                @input="getOptions()"
+                label="annotation scheme"
+              />
+            </div> -->
             <div class="col-2">
               <q-select
                 v-model="xtypemodel"
@@ -28,6 +39,14 @@
                 label="x-Axis"
               />
             </div>
+            <q-slider 
+              v-model="xminocc" 
+              :min="0" 
+              :max="100"
+              label
+              :label-value="(xminocc>0)?'at least '+xminocc+' occurrences for '+xmodel:'no filter on minimum occurrences for '+xmodel"
+              @change="getChartdata()"
+            />
             <q-space/>
             <div class="col-2">
               <q-select
@@ -45,6 +64,14 @@
                 label="y-Axis"
               />
             </div>
+            <q-slider 
+              v-model="yminocc" 
+              :min="0" 
+              :max="100"
+              label
+              :label-value="(yminocc>0)?'at least '+yminocc+' occurrences for '+ymodel:'no filter on minimum occurrences for '+ymodel"
+              @change="getChartdata()"
+            />
             <!-- <div class="col-1">
               <q-btn label="Show" dense type="submit" color="primary" no-caps />
             </div> -->
@@ -52,7 +79,9 @@
             <q-btn flat dense icon="cloud_download" color="primary" @click="downloadGraphAsPng()">
                <q-tooltip :delay="300" content-class="text-white bg-primary" >download the graph as png</q-tooltip>
             </q-btn>
-            <!-- <q-btn label="Try" @click="trystuff()" color="secondary" no-caps /> -->
+            <q-btn label="Try" @click="trystuff()" color="white" no-caps >
+				<q-tooltip :delay="300" content-class="text-white bg-primary" >temporary button for development</q-tooltip>
+			</q-btn>
           </div>
         </q-form>
 
@@ -66,7 +95,36 @@
             dense
             @input="labeldisplaychanged"
           />
-
+          <q-toggle 
+            v-model="squareit" 
+            label="square the chart" 
+            icon="border_all"
+            @input="drawit"
+            />
+          <q-knob
+            :angle="90"
+            :min="0"
+            :max="360"
+            :step="45"
+            show-value
+            font-size="10px"
+            class="q-ma-md"
+            v-model="labelrotation"
+            size="80px"
+            :thickness="0.25"
+            color="primary"
+            track-color="white"
+            @change="drawit"
+          >
+                {{ labelrotation }}°
+                <q-tooltip :delay="300" content-class="text-white bg-primary" >label rotation</q-tooltip>
+          </q-knob>
+            <!-- 
+   size="150px"
+               
+             :thickness="0.22"
+              -->
+           
         </div>
       </div>
     </div>
@@ -79,6 +137,12 @@
 import api from "../boot/backend-api";
 import BubbleChart from "../components/charts/BubbleChart";
 // import Vue from 'vue'
+var canvas = require('canvas');
+// var jsdom = require('jsdom');
+    // C2S = require('canvas2svg');
+
+// var document = jsdom.jsdom();
+// var ctx = new C2S({document: document});
 
 var pngfilename='graph.png';
 function savePngAs(blob,filename ) { 
@@ -99,16 +163,25 @@ export default {
   data() {
     return {
       chartdata: null,
+      scheme:'SUD',
+      schemeoptions:['SUD', 'UD'],
       xtypemodel: 'direction',
       ytypemodel: 'direction',
       xtypeoptions: ["direction", "distance", "distribution"],
       ytypeoptions: ["direction", "distance", "distribution"],
-      
+      loading:false,
       xmodel: 'subj',
       ymodel: 'comp',
       xoptions: ["subj", "comp"],
       yoptions: ["subj", "comp"],
-
+      labelrotation: 0,
+      nblang:0,
+      xminocc:0,
+      yminocc:0,
+      xymin:0,
+      xymax:100,
+      squareit: false,
+      testit: true,
       labeldisplay: 'auto',
       labeldisplayoptions: [
         {
@@ -128,18 +201,36 @@ export default {
     };
   },
     computed: {
-        
         displayoptions() {return this.getDisplayOptions()},
-        
+		schema () {
+			return this.$store.state.sche
+			}
     },
+
+	watch: {
+		schema (newSchema, oldSchema) {
+			console.log(`We have ${newSchema} now, yay!`);
+			this.scheme=newSchema;
+			this.getOptions()
+		}
+  },
+
   mounted() {
     this.$refs.bubblechart.mainChart.canvas.parentNode.style.width = '88vh';
     this.getTypes()
+    
     // this.getChartdata();
   },
   methods: {
-    trystuff() { // used for testing with the test button
+    trystuff() { // used for testing with the test button, to be commented out for production
       console.log('trying...')
+		// this.$store.commit('increment');
+		 console.log('schema...',this.schema)
+    //   console.log(this.chartdata)
+    //   console.log(this.$refs.bubblechart.mainChart.chart.data.datasets)
+    //   // [0].data.x)
+    //   this.chartdata[0].data[0].x=this.chartdata[0].data[0].x+10;
+    //   this.drawit()
     },
     // chartdata() {return this.getChartdata()},
     getTypes() {
@@ -170,6 +261,7 @@ export default {
     },
 
     async getOptions() {
+		this.loading=true;
       // console.log("getOptions",this.xoptions,  this.yoptions)
       var xoptions = await this.getRelationsOptions(this.xtypemodel);
       if ((xoptions !== undefined) && !xoptions.includes(this.xmodel)) this.xmodel = this.goodSelection(xoptions);
@@ -203,34 +295,71 @@ export default {
    
 
     },
-   
+    drawit(){
+      // console.log(999,newdata)
+      var disopt = this.getDisplayOptions()
+      if (this.squareit) {
+        disopt.scales.yAxes[0].ticks = {min:0, max:this.xymax};
+        disopt.scales.xAxes[0].ticks = {min:0, max:this.xymax, fontFamily: 'Lato',
+           fontColor: "#abc",
+           fontSize: 12,
+           };
+      }
+      // ,mirror:true minRotation: 30
+      // else {
+      //   disopt.scales.yAxes[0].ticks = {};
+      //   disopt.scales.xAxes[0].ticks = {};
+      // }
+        
+      this.$refs.bubblechart.setData(this.chartdata, disopt);
+	  this.loading=false;
+    },
   
     getChartdata() {
-      // console.log('getChartdata')
-      if (!(this.xoptions.includes(this.xmodel)) )
-        {console.log(99999,'returned');return}
-    
-      api
-        .getData({ 
-                  xtype: this.xtypemodel, x:this.xmodel,
-                  ytype: this.ytypemodel, y:this.ymodel
+		if (!(this.xoptions.includes(this.xmodel)) )
+			{console.log('choice not among options. returned');return}
+		this.loading=true;
+		api
+			.getData({ 
+                  xtype: this.xtypemodel, x:this.xmodel, xminocc:this.xminocc,
+                  ytype: this.ytypemodel, y:this.ymodel, yminocc:this.yminocc
                   })
         .then(response => {
-          // console.log(66565,this.xmodel)
-          this.$q.notify({
-            message: `That worked! Check out the cloud of languages!`,
-            color: "positive",
-            position: "bottom"
-          });
-          this.$refs.bubblechart.setData(response.data.chartdata, this.getDisplayOptions());
-          return response.data.chartdata;
-        })
+            this.nblang = response.data.nblang;
+            this.xymax = response.data.xymax;
+            this.$q.notify({
+              message: `That worked! Check out the cloud of `+this.nblang+` languages!`,
+              color: "positive",
+              position: "bottom"
+            });
+            if (this.chartdata) // copy into old data to get the dots moving
+              {
+                const lang2data = response.data.chartdata.reduce(function(result, item) {
+                    result[item.label[0]] = item; return result}, {});
+
+                for (let [index, la] of this.chartdata.entries()) {
+                  if (la.label[0] in lang2data) {
+                    la.data = lang2data[la.label[0]].data;
+                    delete lang2data[la.label[0]];
+                  }
+                  else this.chartdata.splice(index,1)
+                }
+                console.log(lang2data)
+                for (var la in lang2data)
+                {
+                  console.log(la);
+                  this.chartdata.push(lang2data[la])
+                }
+              }
+            else this.chartdata = response.data.chartdata;  
+            this.drawit();
+          })
         .catch(error => {
-          this.$q.notify({
-            message: `${error}`,
-            color: "negative",
-            position: "bottom"
-          });
+            this.$q.notify({
+              message: `${error}`,
+              color: "negative",
+              position: "bottom"
+            });
         });
     },
     getDisplayOptions() {
@@ -268,8 +397,8 @@ export default {
             //     return context.dataset.label + '\n' + Math.round(value.x);
             // },
             offset: 1,
-            // rotation: 315
-            // padding: 20
+            rotation: this.labelrotation,
+            // padding: 200,
             clamp: true,
             display: this.labeldisplay, //'auto',
             anchor: 'center', //    'center', 'start' 'end'
@@ -283,13 +412,18 @@ export default {
           text: (this.xtypemodel==this.ytypemodel) ? this.xtypemodel+': '+this.xmodel+'::'+this.ymodel : this.xtypemodel+'::'+this.ytypemodel+': '+this.xmodel+'::'+this.ymodel 
         },
         scales: {
+          
           yAxes: [{
+            // display: true,
+            // gridLines:[{    drawBorder: true, display: true,color:'rgb(255, 159, 64)'}],
             scaleLabel: {
               display: true,
               labelString: this.ymodel
             }
           }],
           xAxes: [{
+               
+           
             scaleLabel: {
               display: true,
               labelString: this.xmodel

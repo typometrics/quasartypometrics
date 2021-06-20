@@ -14,8 +14,34 @@ Vue.use(Vuex)
  * with the Store instance.
  */
 
+
+// const basket = new Vuex.Store({
+// 	state: {
+// 	  fruits: []
+// 	},
+	
+// 	// Obviously you would need some mutations and actions,
+// 	// but to make example cleaner I'll skip this part.
+//   })
+  
+//   export default basket
+
+
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
+
+	state: {
+		sche: 0
+	  },
+	mutations: {
+		changeSchema (state, sche) {
+		  state.sche=sche;
+		//   console.log(78787,ttt, state.sche, this)
+		}
+	},
+
+
+
     modules: {
       // example
     },

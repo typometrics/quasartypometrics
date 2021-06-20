@@ -2,6 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
+         <!-- class="bg-primary text-white q-my-md "> -->
         <q-btn
           flat
           dense
@@ -12,10 +13,56 @@
         />
 
         <q-toolbar-title>
-          typometrics
+          Typometrics
         </q-toolbar-title>
+<!-- <q-space /><q-space /><q-space /><q-space /><q-space /> -->
+<q-select class="column q-gutter-lg col-2 bg-white"
+		stretch 
+		v-model="scheme"
+		:options="schemeoptions"
+		@input="schemaChanged()"
+		label="annotation scheme"
+		/>
+<!-- <q-space /> -->
+	
+	  
+<!-- 
+<q-btn-dropdown stretch flat label="Dropdown">
+        <q-list>
+          <q-item-label header>Folders</q-item-label>
+          <q-item v-for="n in 3" :key="`x.${n}`" clickable v-close-popup tabindex="0">
+            <q-item-section avatar>
+              <q-avatar icon="folder" color="secondary" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Photos</q-item-label>
+              <q-item-label caption>February 22, 2016</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-icon name="info" />
+            </q-item-section>
+          </q-item>
+          <q-separator inset spaced />
+          <q-item-label header>Files</q-item-label>
+          <q-item v-for="n in 3" :key="`y.${n}`" clickable v-close-popup tabindex="0">
+            <q-item-section avatar>
+              <q-avatar icon="assignment" color="primary" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Vacation</q-item-label>
+              <q-item-label caption>February 22, 2016</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-icon name="info" />
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
+      <q-separator dark vertical />
+ -->
 
-        <div>typometrics v{{ 0.1 }}</div>
+
+        &nbsp;<div>&nbsp;Typometrics v{{ 0.99 }}</div>
       </q-toolbar>
     </q-header>
 <!-- show-if-above -->
@@ -55,23 +102,33 @@ export default {
   components: {
     EssentialLink
   },
-
+	// mounted() {
+	// 	console.log(888888,this.scheme,this.$store)
+	// },
+	methods: {
+		schemaChanged(sche) {
+			// console.log(999999, this.scheme)
+			this.$store.commit('changeSchema', this.scheme);
+		}
+	},
   data () {
     return {
-      leftDrawerOpen: false,
-      essentialLinks: [
-        // {
-        //   title: 'Docs',
-        //   caption: 'quasar.dev',
-        //   icon: 'school',
-        //   link: 'https://quasar.dev'
-        // },
-        // {
-        //   title: 'Github',
-        //   caption: 'github.com/quasarframework',
-        //   icon: 'code',
-        //   link: 'https://github.com/quasarframework'
-        // },
+		scheme:'SUD',
+		schemeoptions:['SUD', 'UD'],
+		leftDrawerOpen: false,
+		essentialLinks: [
+        {
+          title: 'Typometrics article',
+          caption: 'Glossa',
+          icon: 'school',
+          link: 'https://www.glossa-journal.org/articles/10.5334/gjgl.764/'
+        },
+        {
+          title: 'Github',
+          caption: 'github.com/typometrics',
+          icon: 'code',
+          link: 'https://github.com/typometrics'
+        },
         // {
         //   title: 'Discord Chat Channel',
         //   caption: 'chat.quasar.dev',
