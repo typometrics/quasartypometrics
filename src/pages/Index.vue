@@ -21,7 +21,7 @@
                 :options="schemeoptions"
                 @input="getOptions()"
                 label="annotation scheme"
-              />
+              /> 
             </div> -->
             <div class="col-2">
               <q-select
@@ -31,14 +31,29 @@
                 label="measure x-Axis"
               />
             </div>
+
             <div class="col-2">
               <q-select
                 v-model="xmodel"
-                :options="xoptions"
+                use-input
+                hide-selected
+                fill-input
+                input-debounce="200"
+                :options="fxoptions"
+                @filter="filterOpt"
                 @input="getChartdata()"
-                label="x-Axis"
-              />
+                label="x-Axis" 
+              >
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                  </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
             </div>
+
             <q-slider 
               v-model="xminocc" 
               :min="0" 
@@ -56,14 +71,29 @@
                 label="measure y-Axis"
               />
             </div>
+
             <div class="col-2">
               <q-select
                 v-model="ymodel"
-                :options="yoptions"
+                use-input
+                hide-selected
+                fill-input
+                input-debounce="200"
+                :options="fyoptions"
+                @filter="filterOpt"
                 @input="getChartdata()"
                 label="y-Axis"
-              />
+              >
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                  </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
             </div>
+
             <q-slider 
               v-model="yminocc" 
               :min="0" 
@@ -136,6 +166,7 @@
 <script>
 import api from "../boot/backend-api";
 import BubbleChart from "../components/charts/BubbleChart";
+import { ref } from 'vue'
 // import Vue from 'vue'
 var canvas = require('canvas');
 // var jsdom = require('jsdom');
@@ -148,6 +179,7 @@ var pngfilename='graph.png';
 function savePngAs(blob,filename ) { 
   // console.log(this.yoptions) 
   const url = window.URL.createObjectURL(blob);
+  console.log("savePng url = ",url);
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', pngfilename);
@@ -161,6 +193,7 @@ export default {
     BubbleChart
   },
   data() {
+    //const fxoptions = ref(["subj", "comp"])
     return {
       chartdata: null,
       scheme:'SUD',
@@ -172,6 +205,8 @@ export default {
       loading:false,
       xmodel: 'subj',
       ymodel: 'comp',
+      fxoptions: ["subj", "comp"],
+      fyoptions: ["subj", "comp"],
       xoptions: ["subj", "comp"],
       yoptions: ["subj", "comp"],
       labelrotation: 0,
@@ -226,8 +261,8 @@ export default {
       console.log('trying...')
 		// this.$store.commit('increment');
 		 console.log('schema...',this.schema)
-    //   console.log(this.chartdata)
-    //   console.log(this.$refs.bubblechart.mainChart.chart.data.datasets)
+     console.log(this.chartdata)
+     console.log(this.$refs.bubblechart.mainChart.chart.data.datasets)
     //   // [0].data.x)
     //   this.chartdata[0].data[0].x=this.chartdata[0].data[0].x+10;
     //   this.drawit()
@@ -285,6 +320,24 @@ export default {
         }
       },
 
+      filterOpt (val, update) {
+        if (val == '') {
+          //console.log("hhhhhhh,    \n",this.xoptions)
+          update(() => {
+            this.fxoptions = this.xoptions
+            this.fyoptions = this.yoptions
+            //console.log(this.fxoptions);
+          })
+          return
+        }
+        update(() => {
+          const needle = val.toLowerCase()
+          this.fxoptions = this.xoptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+          //console.log("after filter: ", this.fxoptions);
+          this.fyoptions = this.yoptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+        })
+      },
+
     
     downloadGraphAsPng() {
       pngfilename = this.getDisplayOptions().title.text+'.png';
@@ -296,7 +349,7 @@ export default {
 
     },
     drawit(){
-      // console.log(999,newdata)
+      //console.log(999,newdata)
       var disopt = this.getDisplayOptions()
       if (this.squareit) {
         disopt.scales.yAxes[0].ticks = {min:0, max:this.xymax};
@@ -436,6 +489,9 @@ export default {
     labeldisplaychanged(v) { 
      this.$refs.bubblechart.setDisplayLabels(v)
 		},
+
+
+
 
   }
 };
