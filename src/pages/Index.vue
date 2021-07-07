@@ -106,9 +106,16 @@
               <q-btn label="Show" dense type="submit" color="primary" no-caps />
             </div> -->
             <!-- <q-btn label="Download graph" color="primary" no-caps dense/> -->
-            <q-btn flat dense icon="cloud_download" color="primary" @click="downloadGraphAsPng()">
-               <q-tooltip :delay="300" content-class="text-white bg-primary" >download the graph as png</q-tooltip>
-            </q-btn>
+            <q-btn-group spread>
+              <q-btn flat dense icon="cloud_download" color="primary" @click="downloadGraphAsPng()">
+                <q-tooltip :delay="300" content-class="text-white bg-primary" >download the graph as png</q-tooltip>
+              </q-btn>
+              <q-btn flat dense icon="cloud_download" color="secondary" @click="exportData()">
+                <q-tooltip :delay="300" content-class="text-white bg-primary" >export data as .json</q-tooltip>
+              </q-btn>
+            </q-btn-group>
+
+
             <q-btn label="Try" @click="trystuff()" color="white" no-caps >
 				<q-tooltip :delay="300" content-class="text-white bg-primary" >temporary button for development</q-tooltip>
 			</q-btn>
@@ -167,6 +174,7 @@
 import api from "../boot/backend-api";
 import BubbleChart from "../components/charts/BubbleChart";
 import { ref } from 'vue'
+import { exportFile } from 'quasar'
 // import Vue from 'vue'
 var canvas = require('canvas');
 // var jsdom = require('jsdom');
@@ -196,6 +204,7 @@ export default {
     //const fxoptions = ref(["subj", "comp"])
     return {
       chartdata: null,
+      plotData: null,
       scheme:'SUD',
       schemeoptions:['SUD', 'UD'],
       xtypemodel: 'direction',
@@ -345,9 +354,31 @@ export default {
           savePngAs(blob, pngfilename);
       });
       this.$q.notify({message:`File download started`,color: "positive"});
-   
 
     },
+
+    exportData(){
+      const filename = this.getDisplayOptions().title.text+'.json';
+      //console.log("len = ", this.chartdata.length);
+
+      this.plotData = ""
+      for (var i in this.chartdata){
+        this.plotData += '\n{\n"label": '+ JSON.stringify(this.chartdata[i]['label'])+',\n'+
+                           '"data": '+ JSON.stringify(this.chartdata[i]['data'])+"\n}\n,"
+      }
+      //console.log("type = ", typeof this.plotData);
+      this.plotData = '['+ this.plotData.substring(0, this.plotData.length-1)+']';
+
+      const status = exportFile(filename, this.plotData, 'text/json');
+      if (status == true){
+        this.$q.notify({message:`Json file download started`,color: "positive"});
+      }else{
+        this.$q.notify({ message: `Download error: ${status}`, color: "negative"});
+      }
+
+    },
+
+
     drawit(){
       //console.log(999,newdata)
       var disopt = this.getDisplayOptions()
@@ -489,7 +520,6 @@ export default {
     labeldisplaychanged(v) { 
      this.$refs.bubblechart.setDisplayLabels(v)
 		},
-
 
 
 
