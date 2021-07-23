@@ -35,6 +35,10 @@ export default {
         return API.get('types/', data); //, header);
     },
 
+    changeScheme(data){
+        return API.put('scheme/',data)
+    }
+
 
 
 

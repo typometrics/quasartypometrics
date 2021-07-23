@@ -36,7 +36,7 @@ export default function (/* { ssrContext } */) {
 	mutations: {
 		changeSchema (state, sche) {
 		  state.sche=sche;
-		//   console.log(78787,ttt, state.sche, this)
+		console.log(78787,"ttt", state.sche, this)
 		}
 	},
 

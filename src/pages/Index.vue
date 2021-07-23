@@ -110,8 +110,8 @@
               <q-btn flat dense icon="cloud_download" color="primary" @click="downloadGraphAsPng()">
                 <q-tooltip :delay="300" content-class="text-white bg-primary" >download the graph as png</q-tooltip>
               </q-btn>
-              <q-btn flat dense icon="cloud_download" color="secondary" @click="exportData()">
-                <q-tooltip :delay="300" content-class="text-white bg-primary" >export data as .json</q-tooltip>
+              <q-btn flat dense icon="cloud_download" color="orange" @click="exportData()">
+                <q-tooltip :delay="300" content-class="text-white bg-secondary" >export data as .json</q-tooltip>
               </q-btn>
             </q-btn-group>
 
@@ -255,7 +255,9 @@ export default {
 		schema (newSchema, oldSchema) {
 			console.log(`We have ${newSchema} now, yay!`);
 			this.scheme=newSchema;
-			this.getOptions()
+      console.log("shema type ",typeof(this.scheme), " val", this.scheme);
+      this.changeScheme();
+
 		}
   },
 
@@ -277,6 +279,19 @@ export default {
     //   this.drawit()
     },
     // chartdata() {return this.getChartdata()},
+    
+    changeScheme(){
+      api
+     .changeScheme({sche :this.scheme})
+     .then(response => {
+        //if response.data.change:
+          console.log("current scheme: "+ this.scheme," ", response.data.change);
+          this.getOptions()
+     })
+    },
+
+
+
     getTypes() {
       // console.log('getTypes')
       api
@@ -329,7 +344,7 @@ export default {
         }
       },
 
-      filterOpt (val, update) {
+    filterOpt (val, update) {
         if (val == '') {
           //console.log("hhhhhhh,    \n",this.xoptions)
           update(() => {

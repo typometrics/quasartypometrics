@@ -71,14 +71,14 @@ export default {
   methods: {
 
     setData(dataset, displayoptions) {
-      // console.log('+++bubble',dataset)
+      //console.log('+++bubble',dataset)
       this.mainChart.data.datasets = dataset;
       this.mainChart.options = displayoptions;
       this.mainChart.update();
      
     },
     setDisplayLabels: function(v) {
-      // console.log('----bubble',v)
+      console.log('----bubble',v)
       this.mainChart.options.plugins.datalabels.display = v;
       this.mainChart.update();
    
@@ -86,8 +86,9 @@ export default {
  
 
     createChart (chartId) {
-      // console.log(555,this.displayoptions.animation)
+      console.log(555,this.displayoptions.animation)
       const ctx = document.getElementById(chartId)
+      console.log("--------------------ctx",ctx);
       const myChart = new Chart(ctx, {
         plugins: [ChartDataLabels],
         type: 'diagonalBubble', //scatter also works but tooltip is different
