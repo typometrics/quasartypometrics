@@ -247,18 +247,17 @@ export default {
     computed: {
         displayoptions() {return this.getDisplayOptions()},
 		schema () {
-			return this.$store.state.sche
+			   return this.$store.state.sche
 			}
     },
 
-	watch: {
-		schema (newSchema, oldSchema) {
-			console.log(`We have ${newSchema} now, yay!`);
-			this.scheme=newSchema;
-      console.log("shema type ",typeof(this.scheme), " val", this.scheme);
-      this.changeScheme();
+	  watch: {
+      schema (newSchema, oldSchema) {
+        console.log(`We have ${newSchema} now, yay!`);
+        this.scheme=newSchema;
+        this.getOptions()
 
-		}
+      }
   },
 
   mounted() {
@@ -279,18 +278,6 @@ export default {
     //   this.drawit()
     },
     // chartdata() {return this.getChartdata()},
-    
-    changeScheme(){
-      api
-     .changeScheme({sche :this.scheme})
-     .then(response => {
-        //if response.data.change:
-          console.log("current scheme: "+ this.scheme," ", response.data.change);
-          this.getOptions()
-     })
-    },
-
-
 
     getTypes() {
       // console.log('getTypes')
@@ -314,8 +301,14 @@ export default {
      },
     
     goodSelection(opts) {
-      if (opts.includes('subj')) return 'subj'
-      if (opts.includes('VERB-comp:obj-NOUN')) return 'VERB-comp:obj-NOUN'
+      if (this.scheme == 'SUD'){
+        if (opts.includes('subj')) return 'subj'
+        if (opts.includes('VERB-comp:obj-NOUN')) return 'VERB-comp:obj-NOUN'
+      }
+      if (this.scheme == 'UD'){
+        if (opts.includes('nsubj')) return 'nsubj'
+        if (opts.includes('obj')) return 'obj'
+      }
       return opts[0]
     },
 
@@ -461,6 +454,7 @@ export default {
             });
         });
     },
+
     getDisplayOptions() {
       return {
         aspectRatio:1,

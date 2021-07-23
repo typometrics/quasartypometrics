@@ -95,6 +95,7 @@
 
 <script>
 import EssentialLink from 'components/EssentialLink.vue'
+import api from "../boot/backend-api";
 
 export default {
   name: 'MainLayout',
@@ -107,13 +108,25 @@ export default {
 	// },
 	methods: {
 		schemaChanged(sche) {
-			// console.log(999999, this.scheme)
+			//console.log(9999999999999, this.scheme)
 			this.$store.commit('changeSchema', this.scheme);
+      api
+     .changeScheme({sche :this.scheme})
+     .then(response => {
+          console.log("current scheme: "+ this.scheme," ", response.data.change);
+     })
+
 		}
 	},
   data () {
+    const defaulSche = 'SUD';
+    api
+     .changeScheme({sche :defaulSche})
+     .then(response => {
+          console.log("refrech page with default scheme: "+ defaulSche," ", response.data.change);
+     })
     return {
-		scheme:'SUD',
+		scheme: defaulSche,
 		schemeoptions:['SUD', 'UD'],
 		leftDrawerOpen: false,
 		essentialLinks: [
@@ -160,6 +173,7 @@ export default {
         //   link: 'https://awesome.quasar.dev'
         // }
       ]
+    
     }
   }
 }
