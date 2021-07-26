@@ -7,11 +7,11 @@
         </div>
       </div>
     </q-card-section> -->
-    <div class="col" style="position: relative;  width:40vw">
+    <div class="col" style="position: relative;  width:50vw; height:50vw">
     <!-- <q-card-section style="position: relative;  width:40vw"> -->
       <canvas id="bubble-chart"></canvas>
     <!-- </q-card-section> -->
-            </div>
+    </div>
 
   </div>
 </template>
@@ -93,6 +93,7 @@ export default {
         plugins: [ChartDataLabels],
         type: 'diagonalBubble', //scatter also works but tooltip is different
         // type: 'bubble', //scatter also works but tooltip is different
+        tooltipCaretSize:0,
         data: this.chartdata,
         options: this.displayoptions
       })

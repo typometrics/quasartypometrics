@@ -22,7 +22,24 @@
                 @input="getOptions()"
                 label="annotation scheme"
               /> 
-            </div> -->
+            </div> 
+             -->
+
+            
+            <div class="q-gutter-y-md">
+                <q-btn-toggle dense
+                  v-model="dimension"
+                  spread
+                  no-caps
+                  toggle-color="primary"
+                  color="white"
+                  text-color="black"
+                  :options="dimensionOptions"
+                  @input="setDimension"
+                />
+            </div>
+
+
             <div class="col-2">
               <q-select
                 v-model="xtypemodel"
@@ -62,9 +79,10 @@
               :label-value="(xminocc>0)?'at least '+xminocc+' occurrences for '+xmodel:'no filter on minimum occurrences for '+xmodel"
               @change="getChartdata()"
             />
+            
             <q-space/>
             <div class="col-2">
-              <q-select
+              <q-select :class="{ hidden:(dimension<2) }" 
                 v-model="ytypemodel"
                 :options="ytypeoptions"
                 @input="getOptions()"
@@ -73,7 +91,7 @@
             </div>
 
             <div class="col-2">
-              <q-select
+              <q-select :class="{ hidden:(dimension<2) }" 
                 v-model="ymodel"
                 use-input
                 hide-selected
@@ -94,7 +112,7 @@
               </q-select>
             </div>
 
-            <q-slider 
+            <q-slider :class="{ hidden:(dimension<2) }" 
               v-model="yminocc" 
               :min="0" 
               :max="100"
@@ -212,6 +230,7 @@ export default {
       xtypeoptions: ["direction", "distance", "distribution"],
       ytypeoptions: ["direction", "distance", "distribution"],
       loading:false,
+      dimension: 2,
       xmodel: 'subj',
       ymodel: 'comp',
       fxoptions: ["subj", "comp"],
@@ -224,6 +243,7 @@ export default {
       yminocc:0,
       xymin:0,
       xymax:100,
+      xlimMax:100,
       squareit: false,
       testit: true,
       labeldisplay: 'auto',
@@ -240,7 +260,13 @@ export default {
           label: 'all labels',
           value: true
         }
-      ]
+      ],
+      dimensionOptions:[
+                      {label: 'Graph 1D', value: 1},
+                      {label: 'Graph 2D', value: 2},
+                     // {label: 'Graph 3D', value: 3},
+                    ]
+
      
     };
   },
@@ -270,14 +296,20 @@ export default {
     trystuff() { // used for testing with the test button, to be commented out for production
       console.log('trying...')
 		// this.$store.commit('increment');
-		 console.log('schema...',this.schema)
-     console.log(this.chartdata)
-     console.log(this.$refs.bubblechart.mainChart.chart.data.datasets)
+		  console.log('schema...',this.schema)
+      console.log(this.chartdata)
+      console.log(this.$refs.bubblechart.mainChart.chart.data.datasets)
     //   // [0].data.x)
     //   this.chartdata[0].data[0].x=this.chartdata[0].data[0].x+10;
     //   this.drawit()
     },
     // chartdata() {return this.getChartdata()},
+    
+    setDimension(dim){
+      this.dimension = dim;
+      if (dim == 1){ this.labelrotation = 90;}
+      this.getChartdata();
+    },
 
     getTypes() {
       // console.log('getTypes')
@@ -301,6 +333,7 @@ export default {
      },
     
     goodSelection(opts) {
+      console.log("goodSelection");
       if (this.scheme == 'SUD'){
         if (opts.includes('subj')) return 'subj'
         if (opts.includes('VERB-comp:obj-NOUN')) return 'VERB-comp:obj-NOUN'
@@ -321,7 +354,7 @@ export default {
       
       var yoptions = await this.getRelationsOptions(this.ytypemodel);
       if ((yoptions !== undefined) && !yoptions.includes(this.ymodel)) this.ymodel = this.goodSelection(yoptions);
-      this.yoptions = yoptions
+      this.yoptions = yoptions;
 
       this.getChartdata();
     },
@@ -392,7 +425,7 @@ export default {
       var disopt = this.getDisplayOptions()
       if (this.squareit) {
         disopt.scales.yAxes[0].ticks = {min:0, max:this.xymax};
-        disopt.scales.xAxes[0].ticks = {min:0, max:this.xymax, fontFamily: 'Lato',
+        disopt.scales.xAxes[0].ticks = {min:0, max:this.xlimMax, fontFamily: 'Lato',
            fontColor: "#abc",
            fontSize: 12,
            };
@@ -411,14 +444,24 @@ export default {
 		if (!(this.xoptions.includes(this.xmodel)) )
 			{console.log('choice not among options. returned');return}
 		this.loading=true;
+
+    const graphPara = {'axtypes': [this.xtypemodel], 'ax':[this.xmodel], 'axminocc':[this.xminocc]};
+    if (this.dimension >1){ //2d
+      graphPara['axtypes'].push(this.ytypemodel);
+      graphPara['ax'].push(this.ymodel);
+      graphPara['axminocc'].push(this.yminocc);
+    }
+    //todo 3d
 		api
 			.getData({ 
-                  xtype: this.xtypemodel, x:this.xmodel, xminocc:this.xminocc,
-                  ytype: this.ytypemodel, y:this.ymodel, yminocc:this.yminocc
+                  //xtype: this.xtypemodel, x:this.xmodel, xminocc:this.xminocc,
+                  //ytype: this.ytypemodel, y:this.ymodel, yminocc:this.yminocc
+                  axtypes : graphPara['axtypes'],  ax : graphPara['ax'],  axminocc : graphPara['axminocc'], dim: this.dimension
                   })
         .then(response => {
             this.nblang = response.data.nblang;
             this.xymax = response.data.xymax;
+            this.xlimMax = response.data.xlimMax;
             this.$q.notify({
               message: `That worked! Check out the cloud of `+this.nblang+` languages!`,
               color: "positive",
@@ -456,6 +499,8 @@ export default {
     },
 
     getDisplayOptions() {
+      const pad = 100*(this.dimension>1);
+      const squee = 60*(this.dimension == 1); //
       return {
         aspectRatio:1,
         devicePixelRatio:3,
@@ -465,6 +510,14 @@ export default {
         //   duration: 5000,
         //   easing: 'easeOutQuart',
         // },
+        layout: {
+          padding: {
+            right: pad, //show label at right of xmax
+            bottom: pad + squee, //in order to have a square(with pad) or a rectangle(with squee)
+            top: squee //in order to have a rectangle
+          }
+          },
+
         plugins: {
           datalabels: {
             // anchor: function (context) {
@@ -495,7 +548,7 @@ export default {
             clamp: true,
             display: this.labeldisplay, //'auto',
             anchor: 'center', //    'center', 'start' 'end'
-            align: 'right' //'center' 'start''end''right' 'bottom' 'left' 'top':
+            align: (this.dimension == 1)?"bottom" : "right"  //'center' 'start''end''right' 'bottom' 'left' 'top':
 
           }
         },
@@ -505,31 +558,30 @@ export default {
           text: (this.xtypemodel==this.ytypemodel) ? this.xtypemodel+': '+this.xmodel+'::'+this.ymodel : this.xtypemodel+'::'+this.ytypemodel+': '+this.xmodel+'::'+this.ymodel 
         },
         scales: {
-          
+
           yAxes: [{
             // display: true,
             // gridLines:[{    drawBorder: true, display: true,color:'rgb(255, 159, 64)'}],
+
             scaleLabel: {
-              display: true,
+              display: this.dimension>1,
               labelString: this.ymodel
             }
           }],
           xAxes: [{
-               
-           
+
             scaleLabel: {
               display: true,
-              labelString: this.xmodel
+              labelString: this.xmodel,
             }
           }]
         }
         }      
     },
 
-    labeldisplaychanged(v) { 
+    labeldisplaychanged(v){ 
      this.$refs.bubblechart.setDisplayLabels(v)
-		},
-
+		}
 
 
   }
