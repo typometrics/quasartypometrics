@@ -307,6 +307,7 @@ export default {
     
     setDimension(dim){
       this.dimension = dim;
+      this.labelrotation = 0;
       if (dim == 1){ this.labelrotation = 90;}
       this.getChartdata();
     },
