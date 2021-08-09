@@ -12,17 +12,47 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title :class="{hidden:!plots}">
           Typometrics
         </q-toolbar-title>
-<!-- <q-space /><q-space /><q-space /><q-space /><q-space /> -->
-<q-select class="column q-gutter-lg col-2 bg-white"
+        <q-toolbar-title :class="{hidden:plots}">
+          Typometrics presentation
+        </q-toolbar-title>
+<!-- <q-space /><q-space /><q-space /><q-space /><q-space />"column q-gutter-lg col-2 bg-white hidden":-->
+
+<q-select :class="schemeStyle"
 		stretch 
 		v-model="scheme"
 		:options="schemeoptions"
 		@input="schemaChanged()"
 		label="annotation scheme"
 		/>
+
+    
+    <div 
+      <q-btn :class="{hidden:!plots}"
+        align="around"
+        spread
+        stretch
+        unelevated
+        color="orange-14"
+        text-color="white"
+        to="/presentation"
+        label="presentation"      
+    />
+        <q-btn :class="{hidden:plots}"
+        align="around"
+        spread
+        stretch
+        unelevated
+        color="orange-14"
+        text-color="white"
+        to="/"
+        label=" scatter plot "      
+    />
+    </div>
+
+
 <!-- <q-space /> -->
 	
 	  
@@ -61,7 +91,7 @@
       <q-separator dark vertical />
  -->
 
-
+        &nbsp;
         &nbsp;<div>&nbsp;Typometrics v{{ 0.99 }}</div>
       </q-toolbar>
     </q-header>
@@ -97,6 +127,7 @@
 import EssentialLink from 'components/EssentialLink.vue'
 import api from "../boot/backend-api";
 
+
 export default {
   name: 'MainLayout',
 
@@ -106,6 +137,14 @@ export default {
 	// mounted() {
 	// 	console.log(888888,this.scheme,this.$store)
 	// },
+  computed:{
+    plots(){
+      console.log("========== ",this.$store.state.showPlot);
+      this.schemeStyle = this.$store.state.showPlot?"column q-gutter-lg col-2 bg-white ":"column q-gutter-lg col-2 bg-white hidden";
+      return this.$store.state.showPlot;
+    }
+
+  },
 	methods: {
 		schemaChanged(sche) {
 			//console.log(9999999999999, this.scheme)
@@ -113,22 +152,28 @@ export default {
       api
      .changeScheme({sche :this.scheme})
      .then(response => {
-          console.log("current scheme: "+ this.scheme," ", response.data.change);
+        console.log("current scheme: "+ this.scheme," ", response.data.change);
      })
 
-		}
+		},
+
 	},
-  data () {
+
+    data () {
+    console.log("current page ", this.$route);
+
     const defaulSche = 'SUD';
     api
      .changeScheme({sche :defaulSche})
      .then(response => {
           console.log("refrech page with default scheme: "+ defaulSche," ", response.data.change);
-     })
+     }) 
     return {
 		scheme: defaulSche,
 		schemeoptions:['SUD', 'UD'],
 		leftDrawerOpen: false,
+    schemeStyle:"column q-gutter-lg col-2 bg-white",
+    webTitle:"Typometrics",
 		essentialLinks: [
         {
           title: 'Typometrics article',
@@ -142,6 +187,14 @@ export default {
           icon: 'code',
           link: 'https://github.com/typometrics'
         },
+        {
+          title: 'presentation',
+          caption: 'presentation of typometrics',
+          icon: 'chat',
+          link: '#/presentation'
+        },
+
+
         // {
         //   title: 'Discord Chat Channel',
         //   caption: 'chat.quasar.dev',
@@ -176,5 +229,6 @@ export default {
     
     }
   }
+  
 }
 </script>

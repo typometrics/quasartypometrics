@@ -31,13 +31,18 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
 
 	state: {
-		sche: 0
+		sche: 0,
+    showPlot: true,
 	  },
 	mutations: {
 		changeSchema (state, sche) {
 		  state.sche=sche;
 		console.log(78787,"ttt", state.sche, this)
-		}
+		},
+    setPage(state, showPlot){
+      state.showPlot =showPlot;
+      console.log("store showplot", showPlot); 
+    }
 	},
 
 

@@ -1,7 +1,7 @@
 <template>
   <q-page class="full-width row no-wrap justify-around items-start content-between q-col-gutter-lg" >
     <div class="">
-      <div class="col-4"  >
+      <div class="col-4" style= "position: relative;"  >
 		  
           <bubble-chart ref="bubblechart" class="col-2" :chartdata="chartdata" :displayoptions="displayoptions" ></bubble-chart>
       </div>
@@ -26,7 +26,7 @@
              -->
 
             
-            <div class="q-gutter-y-md">
+            <div class="q-gutter-y-lg" >
                 <q-btn-toggle dense
                   v-model="dimension"
                   spread
@@ -213,13 +213,16 @@ function savePngAs(blob,filename ) {
   link.click();
   document.body.removeChild(link);
 }
+
 export default {
   name: "PageIndex",
   components: {
     BubbleChart
   },
   data() {
-    //const fxoptions = ref(["subj", "comp"])
+    console.log("plot current page ", this.$route);
+    this.$store.commit('setPage', true);
+
     return {
       chartdata: null,
       plotData: null,
@@ -244,6 +247,7 @@ export default {
       xymin:0,
       xymax:100,
       xlimMax:100,
+      xlimMin:0,
       squareit: false,
       testit: true,
       labeldisplay: 'auto',
@@ -271,8 +275,8 @@ export default {
     };
   },
     computed: {
-        displayoptions() {return this.getDisplayOptions()},
-		schema () {
+      displayoptions() {return this.getDisplayOptions()},
+		  schema () {
 			   return this.$store.state.sche
 			}
     },
@@ -287,7 +291,7 @@ export default {
   },
 
   mounted() {
-    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width = '88vh';
+    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width ='50vw';//'88vh';
     this.getTypes()
     
     // this.getChartdata();
@@ -308,8 +312,11 @@ export default {
     setDimension(dim){
       this.dimension = dim;
       this.labelrotation = 0;
-      if (dim == 1){ this.labelrotation = 90;}
+      //if (dim == 1){ this.labelrotation = 90;}
       this.getChartdata();
+      //console.log("2 change dim ratio", this.getDisplayOptions().aspectRatio);
+      this.$refs.bubblechart.changeDim(dim);
+      this.$refs.bubblechart.setData(this.chartdata, this.getDisplayOptions());
     },
 
     getTypes() {
@@ -423,8 +430,8 @@ export default {
 
     drawit(){
       //console.log(999,newdata)
-      var disopt = this.getDisplayOptions()
-      if (this.squareit) {
+      var disopt = this.getDisplayOptions();
+      if (this.squareit && (this.dimension>1)) {
         disopt.scales.yAxes[0].ticks = {min:0, max:this.xymax};
         disopt.scales.xAxes[0].ticks = {min:0, max:this.xlimMax, fontFamily: 'Lato',
            fontColor: "#abc",
@@ -438,10 +445,12 @@ export default {
       // }
         
       this.$refs.bubblechart.setData(this.chartdata, disopt);
+      //console.log("1.5 ratio draw", disopt.aspectRatio );
 	  this.loading=false;
     },
   
     getChartdata() {
+      //console.log("get chart dat dimension ", this.dimension);
 		if (!(this.xoptions.includes(this.xmodel)) )
 			{console.log('choice not among options. returned');return}
 		this.loading=true;
@@ -463,6 +472,7 @@ export default {
             this.nblang = response.data.nblang;
             this.xymax = response.data.xymax;
             this.xlimMax = response.data.xlimMax;
+            this.xlimMin = response.data.xlimMin;
             this.$q.notify({
               message: `That worked! Check out the cloud of `+this.nblang+` languages!`,
               color: "positive",
@@ -501,10 +511,21 @@ export default {
 
     getDisplayOptions() {
       const pad = 100*(this.dimension>1);
-      const squee = 60*(this.dimension == 1); //
+      const squee = 5*(this.dimension == 1);
+      var graphtitle;
+      if(this.dimension == 1){
+        graphtitle = this.xtypemodel+': '+this.xmodel;
+      }else{
+        graphtitle = (this.xtypemodel==this.ytypemodel) ? this.xtypemodel+': '+this.xmodel+'::'+this.ymodel : this.xtypemodel+'::'+this.ytypemodel+': '+this.xmodel+'::'+this.ymodel;
+      }
+      // const r = (this.dimension == 2)?1:2; 
+      //console.log("0 options ratio",r);
+      console.log("x min", this.xlimMin);
+
       return {
-        aspectRatio:1,
+        aspectRatio:1, //aspectRatio = r:  can get a width/height=2 graph with r = 1, find out a sol
         devicePixelRatio:3,
+        responsive: true,
         maintainAspectRatio: true,
         legend: { display:false},
         // animation: {
@@ -514,8 +535,9 @@ export default {
         layout: {
           padding: {
             right: pad, //show label at right of xmax
-            bottom: pad + squee, //in order to have a square(with pad) or a rectangle(with squee)
-            top: squee //in order to have a rectangle
+            bottom: pad+squee, 
+            top: squee,
+            left : squee*2
           }
           },
 
@@ -549,34 +571,50 @@ export default {
             clamp: true,
             display: this.labeldisplay, //'auto',
             anchor: 'center', //    'center', 'start' 'end'
-            align: (this.dimension == 1)?"bottom" : "right"  //'center' 'start''end''right' 'bottom' 'left' 'top':
+            align: 'right'//(this.dimension == 1)?"bottom" : "right"  //'center' 'start''end''right' 'bottom' 'left' 'top':
 
           }
         },
 
         title: {
           display: true,
-          text: (this.xtypemodel==this.ytypemodel) ? this.xtypemodel+': '+this.xmodel+'::'+this.ymodel : this.xtypemodel+'::'+this.ytypemodel+': '+this.xmodel+'::'+this.ymodel 
+          text: graphtitle
         },
         scales: {
 
-          yAxes: [{
+          xAxes: [{
             // display: true,
             // gridLines:[{    drawBorder: true, display: true,color:'rgb(255, 159, 64)'}],
+            //position:'right',
+            ticks: {
+              display: true,//this.dimension>1,
+              suggestedMin:(this.dimension>1)?this.xlimMin:0,
+            },
+
+            gridLines: {
+              display:this.dimension>1,
+              //drawOnChartArea: this.dimension>1,
+            },
 
             scaleLabel: {
               display: this.dimension>1,
               labelString: this.ymodel
             }
           }],
-          xAxes: [{
+
+          yAxes: [{
+            gridLines: {
+              drawOnChartArea: this.dimension>1,
+            },
+            //position: (this.dimension == 1)?"top" : "bottom" ,
 
             scaleLabel: {
               display: true,
               labelString: this.xmodel,
             }
           }]
-        }
+        },
+        
         }      
     },
 
