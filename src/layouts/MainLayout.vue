@@ -194,7 +194,8 @@ export default {
           link: '#/presentation'
         },
 
-
+        //SUD: https://surfacesyntacticud.github.io/
+        //UD: https://universaldependencies.org/ 
         // {
         //   title: 'Discord Chat Channel',
         //   caption: 'chat.quasar.dev',

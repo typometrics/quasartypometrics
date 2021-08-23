@@ -101,7 +101,7 @@ export default {
       this.displayoptions.aspectRatio = newDim/2;//(newDim == 1)?2:1;
       //console.log("3 ratiooo ",this.mainChart.options.aspectRatio);
       this.mainChart = this.createChart('bubble-chart');
-      this.mainChart.canvas.parentNode.style.width =(newDim == 1)?'24vw':'48vw';//'44vh':'88vh';
+      this.mainChart.canvas.parentNode.style.width =(newDim == 1)?'44vh':'88vh'; //'24vw':'48vw';
     },
 
     setData(dataset, displayoptions) {

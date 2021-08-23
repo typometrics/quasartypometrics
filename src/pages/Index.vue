@@ -55,7 +55,7 @@
                 use-input
                 hide-selected
                 fill-input
-                input-debounce="200"
+                input-debounce="300"
                 :options="fxoptions"
                 @filter="filterOpt"
                 @input="getChartdata()"
@@ -80,7 +80,29 @@
               @change="getChartdata()"
             />
             
-            <q-space/>
+            
+
+            <!-- <q-table
+            title="cloud form distance"
+            :rows="rows"
+            :columns="columns"
+            row-key="id"
+            v-model:pagination="pagination"
+            :loading="loading"
+            :filter="filter"
+            @request="onRequest"
+            binary-state-sort
+          >
+            <template v-slot:top-right>
+              <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
+
+          </q-table> -->
+
             <div class="col-2">
               <q-select :class="{ hidden:(dimension<2) }" 
                 v-model="ytypemodel"
@@ -96,7 +118,7 @@
                 use-input
                 hide-selected
                 fill-input
-                input-debounce="200"
+                input-debounce="300"
                 :options="fyoptions"
                 @filter="filterOpt"
                 @input="getChartdata()"
@@ -219,6 +241,7 @@ export default {
   components: {
     BubbleChart
   },
+
   data() {
     console.log("plot current page ", this.$route);
     this.$store.commit('setPage', true);
@@ -244,7 +267,6 @@ export default {
       nblang:0,
       xminocc:0,
       yminocc:0,
-      xymin:0,
       xymax:100,
       xlimMax:100,
       xlimMin:0,
@@ -269,7 +291,17 @@ export default {
                       {label: 'Graph 1D', value: 1},
                       {label: 'Graph 2D', value: 2},
                      // {label: 'Graph 3D', value: 3},
-                    ]
+                    ],
+      rows: [],//ref([]),
+      filterTable: '',//ref(''),
+      loadingTable: false,//ref(false),
+      pagination: [{
+      sortBy: 'desc',
+      descending: false,
+      page: 1,
+      rowsPerPage: 3,
+      rowsNumber: 10
+    }]
 
      
     };
@@ -291,7 +323,7 @@ export default {
   },
 
   mounted() {
-    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width ='50vw';//'88vh';
+    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width ='88vh',//'50vw';//'88vh';
     this.getTypes()
     
     // this.getChartdata();
@@ -470,6 +502,7 @@ export default {
                   })
         .then(response => {
             this.nblang = response.data.nblang;
+            console.log(this.nblang);
             this.xymax = response.data.xymax;
             this.xlimMax = response.data.xlimMax;
             this.xlimMin = response.data.xlimMin;
@@ -587,7 +620,7 @@ export default {
             // gridLines:[{    drawBorder: true, display: true,color:'rgb(255, 159, 64)'}],
             //position:'right',
             ticks: {
-              display: true,//this.dimension>1,
+              display: this.dimension>1,
               suggestedMin:(this.dimension>1)?this.xlimMin:0,
             },
 
