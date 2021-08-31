@@ -1,11 +1,13 @@
 <template>
   <q-page class="full-width row no-wrap justify-around items-start content-between q-col-gutter-lg" >
     <div class="">
-      <div class="col-4" style= "position: relative;"  >
+      <div class="col-2" style= "position: relative;"  >
 		  
           <bubble-chart ref="bubblechart" class="col-2" :chartdata="chartdata" :displayoptions="displayoptions" ></bubble-chart>
       </div>
+
     </div>
+    
 
     <div class="col-2 self-center">
 		<q-spinner color="primary" size="10em" :class="{ hidden : !loading }" :thickness="10"/>
@@ -79,29 +81,7 @@
               :label-value="(xminocc>0)?'at least '+xminocc+' occurrences for '+xmodel:'no filter on minimum occurrences for '+xmodel"
               @change="getChartdata()"
             />
-            
-            
 
-            <!-- <q-table
-            title="cloud form distance"
-            :rows="rows"
-            :columns="columns"
-            row-key="id"
-            v-model:pagination="pagination"
-            :loading="loading"
-            :filter="filter"
-            @request="onRequest"
-            binary-state-sort
-          >
-            <template v-slot:top-right>
-              <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
-                <template v-slot:append>
-                  <q-icon name="search" />
-                </template>
-              </q-input>
-            </template>
-
-          </q-table> -->
 
             <div class="col-2">
               <q-select :class="{ hidden:(dimension<2) }" 
@@ -142,10 +122,12 @@
               :label-value="(yminocc>0)?'at least '+yminocc+' occurrences for '+ymodel:'no filter on minimum occurrences for '+ymodel"
               @change="getChartdata()"
             />
+
+
             <!-- <div class="col-1">
               <q-btn label="Show" dense type="submit" color="primary" no-caps />
             </div> -->
-            <!-- <q-btn label="Download graph" color="primary" no-caps dense/> -->
+            <!-- <q-btn label="Download graph" color="primary" no-caps dense/> red-6-->
             <q-btn-group spread>
               <q-btn flat dense icon="cloud_download" color="primary" @click="downloadGraphAsPng()">
                 <q-tooltip :delay="300" content-class="text-white bg-primary" >download the graph as png</q-tooltip>
@@ -155,10 +137,73 @@
               </q-btn>
             </q-btn-group>
 
-
-            <q-btn label="Try" @click="trystuff()" color="white" no-caps >
-				<q-tooltip :delay="300" content-class="text-white bg-primary" >temporary button for development</q-tooltip>
+            <q-btn-group spread glossy :class="{ hidden:noResults }" >
+            <q-btn label="Closestgraph" @click="similarGraph('dep')" color="red-12" no-caps >
+				<q-tooltip :delay="300" content-class="text-white bg-primary" >find most similar distributions</q-tooltip>
 			</q-btn>
+      
+          <q-btn-dropdown
+          color="amber-9"
+          push
+          glossy
+          no-caps
+          label="similar cloud form"
+        >
+          <q-list>
+            <q-item clickable v-close-popup  @click="similarGraph('dtw')">
+              <q-item-section class = "amber-9" >
+                <q-item-label >Dynamique time warping</q-item-label>
+                <q-item-label caption>cloud form</q-item-label>
+                <q-tooltip :delay="300" content-class="text-white bg-primary" >find most similar cloud form</q-tooltip>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-close-popup @click="similarGraph('marry')">
+              <q-item-section>
+                <q-item-label>Gale–Shapley algorithm</q-item-label>
+                <q-item-label caption>cloud form</q-item-label>
+                <q-tooltip :delay="300" content-class="text-white bg-primary" >find most similar cloud form</q-tooltip>
+              </q-item-section>
+            </q-item>
+          </q-list>  
+        </q-btn-dropdown>
+     </q-btn-group>
+              
+           <!-- 
+        <q-btn label="ClosestGraphDTW" @click="similarGraph('dtw')" color="amber-9" no-caps >
+				<q-tooltip :delay="300" content-class="text-white bg-primary" >find most similar distributions</q-tooltip>
+			</q-btn>
+      <q-list bordered class="rounded-borders">-->
+           
+            <q-expansion-item
+                expand-separator
+                icon="assessment"
+                :label="'DISTANCE TABLE: '+distTitle[currentDist]"
+                header-class="text-black"
+                :class="{ hidden:!this.showCloseGr }" 
+            >
+            <div class="q-pa-md">
+                <q-table
+                  :title="distTitle[currentDist]"
+                  :data="rows"
+                  :columns="columns"
+                  row-key="name"
+                  :filter="filter"
+                  v-model:pagination="pagination"
+                  
+                >
+                <template v-slot:top-right>
+                  <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+                    <template v-slot:append>
+                      <q-icon name="search" />
+                    </template>
+                  </q-input>
+                </template>
+                </q-table>
+                </div>
+            </q-expansion-item>
+
+
           </div>
         </q-form>
 
@@ -197,10 +242,9 @@
                 <q-tooltip :delay="300" content-class="text-white bg-primary" >label rotation</q-tooltip>
           </q-knob>
             <!-- 
-   size="150px"
-               
-             :thickness="0.22"
-              -->
+            size="150px"   
+            :thickness="0.22"
+            -->
            
         </div>
       </div>
@@ -236,6 +280,25 @@ function savePngAs(blob,filename ) {
   document.body.removeChild(link);
 }
 
+const columns = [
+  { name: 'desc',
+    required: true,
+    label: 'graph name',
+    align: 'left',
+    field: 'name',
+    sortable: true
+    },
+    { name: 'distance', align: 'center', label: 'distance', field: 'distance', sortable: true },
+]
+const distTitle = {
+  'dep':'language distribution',
+  'dtw':'DTW (cloud form)',
+  'marry':'stable matching (cloud form)'
+}
+
+   
+
+
 export default {
   name: "PageIndex",
   components: {
@@ -248,6 +311,7 @@ export default {
 
     return {
       chartdata: null,
+      closeChartdata:null,
       plotData: null,
       scheme:'SUD',
       schemeoptions:['SUD', 'UD'],
@@ -271,7 +335,9 @@ export default {
       xlimMax:100,
       xlimMin:0,
       squareit: false,
-      testit: true,
+      showCloseGr: false,
+      currentDist:'dep',
+      distTitle,
       labeldisplay: 'auto',
       labeldisplayoptions: [
         {
@@ -292,25 +358,39 @@ export default {
                       {label: 'Graph 2D', value: 2},
                      // {label: 'Graph 3D', value: 3},
                     ],
-      rows: [],//ref([]),
-      filterTable: '',//ref(''),
+      rows: [{name:'self',distance:0.}],
+      columns,
+      filter: '',
       loadingTable: false,//ref(false),
-      pagination: [{
+      pagination: {
       sortBy: 'desc',
       descending: false,
       page: 1,
-      rowsPerPage: 3,
-      rowsNumber: 10
-    }]
+      rowsPerPage: 10,
+      rowsNumber: 40
+    }
 
      
     };
   },
     computed: {
-      displayoptions() {return this.getDisplayOptions()},
-		  schema () {
-			   return this.$store.state.sche
-			}
+        displayoptions() {return this.getDisplayOptions(this.xtypemodel,this.xmodel,this.ytypemodel,this.ymodel,this.xlimMin)},
+	      schema () {
+			    return this.$store.state.sche
+			},
+      pagesNumber(){
+        return Math.ceil(this.rows.length / this.pagination.rowsPerPage)
+      },
+      noResults(){
+        //hide 'similar graph' buttons of options for which we have no relevant results 
+        if(this.dimension == 2 && (this.xtypemodel!='distribution' || this.ytypemodel != 'distribution')){
+          return true;
+        }
+        
+        var isInf = (this.scheme == 'UD' && (this.xmodel.slice(0,2)=='nb'||(this.xtypemodel=='distribution'&& this.xmodel=='total')));        
+        return isInf || (this.xtypemodel=='treeHeight' || this.ytypemodel == 'treeHeight');
+
+      }
     },
 
 	  watch: {
@@ -323,32 +403,63 @@ export default {
   },
 
   mounted() {
-    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width ='88vh',//'50vw';//'88vh';
+    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width = (this.showCloseGr)?'50vh':"88vh",//'44vh';//'88vh';
+    this.$refs.bubblechart.closeChart.canvas.parentNode.style.width ='500px',//'44vh';//'88vh';
+
     this.getTypes()
+
+    // get initial data from server (1st page)
+    // onRequest({
+    //     pagination: pagination.value,
+    //     filter: undefined
+    //   })
     
     // this.getChartdata();
   },
   methods: {
-    trystuff() { // used for testing with the test button, to be commented out for production
-      console.log('trying...')
-		// this.$store.commit('increment');
-		  console.log('schema...',this.schema)
-      console.log(this.chartdata)
-      console.log(this.$refs.bubblechart.mainChart.chart.data.datasets)
-    //   // [0].data.x)
-    //   this.chartdata[0].data[0].x=this.chartdata[0].data[0].x+10;
-    //   this.drawit()
-    },
+    similarGraph(version) { // used for testing with the test button, to be commented out for production
+        console.log('similarity...');
+        if(!this.showCloseGr || this.currentDist == version){
+          this.showCloseGr = !this.showCloseGr;
+          this.$store.commit('showCloseGr', this.showCloseGr);
+          console.log("closeGraph ",this.showCloseGr);
+        }
+        this.currentDist = version;
+        if(this.showCloseGr){
+            const mytyp = (this.dimension==1)?[this.xtypemodel]:[this.xtypemodel,this.ytypemodel];
+            const myax = (this.dimension==1)?[this.xmodel]:[this.xmodel,this.ymodel];
+            console.log("dist version ",version);
+            api
+            .getSimilarGraph({
+                typ: mytyp, ax:myax, version:version,dim:this.dimension
+            })
+            .then(response => {
+                var cl_xtype = response.data.types;
+                var cl_ax = response.data.ax;
+                var cl_dist = response.data.distance;
+                this.rows = response.data.rows;
+                console.log("closest graph ", cl_xtype," ", cl_ax, " ", cl_dist);
+                this.drawClose(cl_xtype,cl_ax)
+            })
+            .catch(error => {
+                this.$q.notify({
+                message: `get similar Graphs: ${error}`,
+                color: "negative",
+                position: "bottom"
+                });
+            });
+        }
+   },
     // chartdata() {return this.getChartdata()},
     
     setDimension(dim){
       this.dimension = dim;
+      this.$store.commit('showCloseGr', false);
       this.labelrotation = 0;
       //if (dim == 1){ this.labelrotation = 90;}
       this.getChartdata();
-      //console.log("2 change dim ratio", this.getDisplayOptions().aspectRatio);
       this.$refs.bubblechart.changeDim(dim);
-      this.$refs.bubblechart.setData(this.chartdata, this.getDisplayOptions());
+      this.$refs.bubblechart.setData(true,this.chartdata, this.getDisplayOptions(this.xtypemodel,this.xmodel,this.ytypemodel,this.ymodel,this.xlimMin));
     },
 
     getTypes() {
@@ -412,7 +523,6 @@ export default {
 
     filterOpt (val, update) {
         if (val == '') {
-          //console.log("hhhhhhh,    \n",this.xoptions)
           update(() => {
             this.fxoptions = this.xoptions
             this.fyoptions = this.yoptions
@@ -430,7 +540,7 @@ export default {
 
     
     downloadGraphAsPng() {
-      pngfilename = this.getDisplayOptions().title.text+'.png';
+      pngfilename = this.setTitle([this.xtypemodel,this.ytypemodel],[this.xmodel,this.ymodel])+'.png'//this.getDisplayOptions().title.text+'.png';
       this.$refs.bubblechart.mainChart.canvas.toBlob(function(blob) {
           savePngAs(blob, pngfilename);
       });
@@ -439,7 +549,7 @@ export default {
     },
 
     exportData(){
-      const filename = this.getDisplayOptions().title.text+'.json';
+      const filename = this.setTitle([this.xtypemodel,this.ytypemodel],[this.xmodel,this.ymodel])+'.json'//this.getDisplayOptions().title.text+'.json';
       //console.log("len = ", this.chartdata.length);
 
       this.plotData = ""
@@ -447,7 +557,6 @@ export default {
         this.plotData += '\n{\n"label": '+ JSON.stringify(this.chartdata[i]['label'])+',\n'+
                            '"data": '+ JSON.stringify(this.chartdata[i]['data'])+"\n}\n,"
       }
-      //console.log("type = ", typeof this.plotData);
       this.plotData = '['+ this.plotData.substring(0, this.plotData.length-1)+']';
 
       const status = exportFile(filename, this.plotData, 'text/json');
@@ -462,7 +571,7 @@ export default {
 
     drawit(){
       //console.log(999,newdata)
-      var disopt = this.getDisplayOptions();
+      var disopt = this.getDisplayOptions(this.xtypemodel,this.xmodel,this.ytypemodel,this.ymodel,this.xlimMin);
       if (this.squareit && (this.dimension>1)) {
         disopt.scales.yAxes[0].ticks = {min:0, max:this.xymax};
         disopt.scales.xAxes[0].ticks = {min:0, max:this.xlimMax, fontFamily: 'Lato',
@@ -476,8 +585,7 @@ export default {
       //   disopt.scales.xAxes[0].ticks = {};
       // }
         
-      this.$refs.bubblechart.setData(this.chartdata, disopt);
-      //console.log("1.5 ratio draw", disopt.aspectRatio );
+      this.$refs.bubblechart.setData(true, this.chartdata, disopt);
 	  this.loading=false;
     },
   
@@ -487,17 +595,17 @@ export default {
 			{console.log('choice not among options. returned');return}
 		this.loading=true;
 
-    const graphPara = {'axtypes': [this.xtypemodel], 'ax':[this.xmodel], 'axminocc':[this.xminocc]};
-    if (this.dimension >1){ //2d
-      graphPara['axtypes'].push(this.ytypemodel);
-      graphPara['ax'].push(this.ymodel);
-      graphPara['axminocc'].push(this.yminocc);
-    }
+        const graphPara = {'axtypes': [this.xtypemodel], 'ax':[this.xmodel], 'axminocc':[this.xminocc]};
+        if (this.dimension >1){ //2d
+        graphPara['axtypes'].push(this.ytypemodel);
+        graphPara['ax'].push(this.ymodel);
+        graphPara['axminocc'].push(this.yminocc);
+        }
     //todo 3d
+    this.showCloseGr = false;
+    this.$store.commit('showCloseGr', this.showCloseGr);
 		api
-			.getData({ 
-                  //xtype: this.xtypemodel, x:this.xmodel, xminocc:this.xminocc,
-                  //ytype: this.ytypemodel, y:this.ymodel, yminocc:this.yminocc
+		.getData({ 
                   axtypes : graphPara['axtypes'],  ax : graphPara['ax'],  axminocc : graphPara['axminocc'], dim: this.dimension
                   })
         .then(response => {
@@ -523,10 +631,10 @@ export default {
                   }
                   else this.chartdata.splice(index,1)
                 }
-                console.log(lang2data)
+                console.log("lang2data",lang2data)
                 for (var la in lang2data)
                 {
-                  console.log(la);
+                  console.log("la",la);
                   this.chartdata.push(lang2data[la])
                 }
               }
@@ -542,19 +650,73 @@ export default {
         });
     },
 
-    getDisplayOptions() {
+    drawClose(xtypes,xmodels){
+        // if (!(this.xoptions.includes(xmodel)) )
+		// 	{console.log('choice not among options. returned');return}
+		  this.loading=true;
+      var axmin = (this.dimension==1)?[0]:[0,0];
+      api
+      .getData({ 
+                  axtypes : xtypes,  ax : xmodels,  axminocc : axmin, dim: this.dimension
+                  })
+        .then(response => {
+            const nblang = response.data.nblang;
+            console.log(nblang);
+            //const xymax = response.data.xymax;
+            //const xlimMax = response.data.xlimMax;
+            this.$q.notify({
+              message: `That worked! Check out the cloud of`+ nblang+` languages!`, color: "positive", position: "bottom"
+            });
+            if (this.closeChartdata) // copy into old data to get the dots moving
+              {
+                const lang2data = response.data.chartdata.reduce(function(result, item) {
+                    result[item.label[0]] = item; return result}, {});
+
+                for (let [index, la] of this.closeChartdata.entries()) {
+                  if (la.label[0] in lang2data) {
+                    la.data = lang2data[la.label[0]].data;
+                    delete lang2data[la.label[0]];
+                  }
+                  else this.closeChartdata.splice(index,1)
+                }
+                console.log(lang2data)
+                for (var la in lang2data)
+                {
+                  console.log(la);
+                  this.closeChartdata.push(lang2data[la])
+                }
+              }
+            else this.closeChartdata = response.data.chartdata;  
+            //this.drawit();
+            var disopt = (this.dimension==1)?this.getDisplayOptions(xtypes[0],xmodels[0],xtypes[0],xmodels[0],response.data.xlimMin):this.getDisplayOptions(xtypes[0],xmodels[0],xtypes[1],xmodels[1],response.data.xlimMin)
+            this.$refs.bubblechart.setData(false, this.closeChartdata, disopt);
+            this.loading=false;
+                })
+                .catch(error => {
+                    this.$q.notify({
+                    message: `${error}`,
+                    color: "negative",
+                    position: "bottom"
+                    });
+        });
+
+    },
+
+    setTitle(typemodel,axmodel){
+        var graphtitle;
+        if(this.dimension == 1){
+            graphtitle = typemodel[0]+': '+ axmodel[0];
+        }else{
+            graphtitle = (typemodel[0]== typemodel[1]) ? typemodel[0]+': '+axmodel[0]+'::'+axmodel[1] : typemodel[0]+'::'+typemodel[1]+': '+axmodel[0]+'::'+axmodel[1];
+      }
+      return graphtitle;
+    },
+
+    getDisplayOptions(xtype,xmodel,ytype,ymodel,xlimMin) {
       const pad = 100*(this.dimension>1);
       const squee = 5*(this.dimension == 1);
-      var graphtitle;
-      if(this.dimension == 1){
-        graphtitle = this.xtypemodel+': '+this.xmodel;
-      }else{
-        graphtitle = (this.xtypemodel==this.ytypemodel) ? this.xtypemodel+': '+this.xmodel+'::'+this.ymodel : this.xtypemodel+'::'+this.ytypemodel+': '+this.xmodel+'::'+this.ymodel;
-      }
-      // const r = (this.dimension == 2)?1:2; 
-      //console.log("0 options ratio",r);
-      console.log("x min", this.xlimMin);
-
+ 
+      var graphtitle = this.setTitle([xtype,ytype],[xmodel,ymodel]);
       return {
         aspectRatio:1, //aspectRatio = r:  can get a width/height=2 graph with r = 1, find out a sol
         devicePixelRatio:3,
@@ -621,7 +783,7 @@ export default {
             //position:'right',
             ticks: {
               display: this.dimension>1,
-              suggestedMin:(this.dimension>1)?this.xlimMin:0,
+              suggestedMin:(this.dimension>1)?xlimMin:0,
             },
 
             gridLines: {
@@ -631,7 +793,7 @@ export default {
 
             scaleLabel: {
               display: this.dimension>1,
-              labelString: this.ymodel
+              labelString: ymodel
             }
           }],
 
@@ -643,7 +805,7 @@ export default {
 
             scaleLabel: {
               display: true,
-              labelString: this.xmodel,
+              labelString: xmodel,
             }
           }]
         },

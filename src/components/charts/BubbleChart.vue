@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white full-width">
+  <div class = 'bg-white full-width row' >
     <!-- <q-card-section class="bg-blue-grey-8">
       <div class="row items-center no-wrap">
         <div class="col">
@@ -7,11 +7,16 @@
         </div>
       </div>
     </q-card-section> -->
-    <div class="col" style= "position: relative;  width:50vw">
+    <div class="col-2" :style="canvasWidth" >
     <!-- <q-card-section style="position: relative;  width:40vw"> -->
       <canvas id="bubble-chart"></canvas>
     <!-- </q-card-section> -->
     </div>
+
+    <div class = "col-2">
+    <div :class="{ hidden:!showClose }" style= "position: relative; width:60vh">
+      <canvas id="bubble-chart1" ></canvas>
+    </div> </div>
 
   </div>
 </template>
@@ -72,47 +77,70 @@ Chart.controllers.simpleBubble = custom1;
 
 
 export default {
-  props: ["chartdata", "displayoptions"],
-  computed: {
+  props: ["chartdata", "displayoptions","closeChartdata"],
   
-  },
 
   data () {
     return {
       mainChart : null,
+      closeChart: null,
       dim: 2,
+      //showClose:false,
       // thislabeldisplay: null
     }
   },
 
 
   mounted () {
-    this.mainChart =  this.createChart('bubble-chart')
+    this.mainChart =  this.createChart(true,'bubble-chart')
+    this.closeChart =  this.createChart(false,'bubble-chart1')
+
     // console.log(3333,this.mainChart)
     // console.log(3333,this.mainChart.chartArea.bottom);
- 
-
 //    
+  },
+
+   computed: {
+    showClose(){
+      return this.$store.state.showCloseGraph;
+    },
+    canvasWidth(){
+      var sty= (this.showClose && this.dim==2)? "position : relative; width:60vh":"position: relative; width:88vh";
+      return (this.dim==1)?"position : relative; width:400px":sty;
+      //if return sty, in 2D, the 2 graphs has the same size, while when we switch the dimension to 1D, the mainChart become too large with unknown reason 
+    },
+
   },
   methods: {
     changeDim(newDim){
       this.dim = newDim;
       this.mainChart.destroy();
+      this.closeChart.destroy();
       this.displayoptions.aspectRatio = newDim/2;//(newDim == 1)?2:1;
-      //console.log("3 ratiooo ",this.mainChart.options.aspectRatio);
-      this.mainChart = this.createChart('bubble-chart');
-      this.mainChart.canvas.parentNode.style.width =(newDim == 1)?'44vh':'88vh'; //'24vw':'48vw';
+      
+      this.mainChart = this.createChart(true,'bubble-chart');
+      this.mainChart.canvas.parentNode.style.width =(this.dim == 1)?'500px':'88vh';
+      console.log("width========= ",this.mainChart.canvas.parentNode.style.width);    
+      this.closeChart = this.createChart(false,'bubble-chart1');
+      this.closeChart.canvas.parentNode.style.width ='400px';//(this.dim == 1)?'500px':'60vh';
+      
     },
 
-    setData(dataset, displayoptions) {
+    setData(main,dataset, displayoptions) {
       //console.log('+++bubble',dataset)
-      this.mainChart.data.datasets = dataset;
-      this.mainChart.options = displayoptions;
-      //console.log("1 setdata ratiooo ",this.mainChart.options.aspectRatio, this.displayoptions.aspectRatio );
-      this.mainChart.update();
+      if(main){
+        this.mainChart.data.datasets = dataset;
+        this.mainChart.options = displayoptions;
+        this.mainChart.update();
+      }else{
+        this.closeChart.data.datasets = dataset;
+        this.closeChart.options = displayoptions;
+        this.closeChart.update();
+      }
      
     },
     setDisplayLabels: function(v) {
+      //for mainChart
       console.log('----bubble',v)
       this.mainChart.options.plugins.datalabels.display = v;
       this.mainChart.update();
@@ -120,19 +148,21 @@ export default {
     },
  
 
-    createChart (chartId) {
-      console.log(555,this.displayoptions.animation)
+    createChart (main, chartId) {
+      //console.log(555,this.displayoptions.animation)
       const ctx = document.getElementById(chartId)
       console.log("--------------------ctx",ctx, "\ndimension", this.dim);
+
       const myChart = new Chart(ctx, {
         plugins: [ChartDataLabels],
         //type: 'diagonalBubble', //scatter also works but tooltip is different
         //type:'bubble', ////scatter also works but tooltip is different
         type: (this.dim == 1)?'simpleBubble' :'diagonalBubble', //if 'bubble' there is no background when download
         //tooltipCaretSize:0,
-        data: this.chartdata,
-        options: this.displayoptions
-      })
+        data: main?this.chartdata:this.closeChartdata,
+        options: this.displayoptions,        
+      });
+      //myChart.canvas.parentNode.style.width =(this.dim == 1)?'44vh':'88vh';
       return myChart
     },
 

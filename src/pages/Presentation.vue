@@ -17,9 +17,6 @@
       background-color:	FloralWhite;
     }
 
-   /* .menusub{
-      text-indent:10px;
-    }*/
     .menu{
       color:cadetblue;
       
@@ -386,23 +383,31 @@ The position of a language point depends on the analysis results of this languag
       </div>
       Please see more pattern and graph analysis methods in  <a href = "https://www.glossa-journal.org/article/id/5397/" class = "link"> (Gerdes et al. 2021)</a>
 <br/>
+
+
+
       <div id = "similarity">
         <hr/>
       <h4 class = "title" >Similarity measures </h4>
-      First and foremost, we normalise all the graphs so as to put values of every measure in [0,1]. In this way, we keep the cloud form of every graph and uniform measurements data before comparing them.
+      First and foremost, we divide measures mentioned above in five groups in consideration of their different natures:<br/>
+the groups “distance” and “direction”:
+“distance”: distance, distance-abs, distance-cfc<br/>
+“direction”: direction, direction-cfc<br/>
+as well as the groups “distribution”, “menzerath”, “treeHeight”.<br/>
+In each group, we compute distances between each pair of scatter plots and try to find the most similar graph for every graph under different types of similarity measures. 
 
 <h6 class = "subtitle">Movement of language points:</h6>
       <div>We call “distribution distance” the distance between the cloud points of two graphs (named graph1 and graph2) in the sense of language points distributions. In other words, if we want to form graph2 with points in graph1 and take language names into account, distribution_distance(graph1, graph2) is the average Euclidean distance that points in graph1 should move.
 <br/><br/>
-To obtain the results, for each language in both graph1 and graph2, we compute the Euclidean distance between its position on graph1 and on graph2, then add up all these distances as the distribution distance between graph1 and graph2.
-<br/><br/>
-Consequently, the maximum distDep(cloud1, cloud2) between two unidimensional clouds of n points is n, because each point can move at most 1 Euclidean distance after data normalisation.
+To obtain the results, for each language in both graph1 and graph2, we compute the Euclidean distance between its position on graph1 and on graph2,  then add up all these distances and divide this sum by number of languages taken into account as the average distribution distance between graph1 and graph2.
+
+<br/>
 </div>
 
 <h6 class = "subtitle">Cloud form</h6>
 <div>To compare the similarity between clouds in two graphs (named graph1 and graph2), we don’t consider points labels (i.e. language names) any more, so that only points positions make sense. In other words, We want to form graph2 with points in graph1 no matter which language a point represents. 
 <br/>
-In this case, a mapping is necessary to match points from one graph to another, then we can compute the Euclidean distance between each matched points group and get the sum as the cloud form distance. 
+In this case, a mapping is necessary to match points from one graph to another, then we can compute the Euclidean distance between each matched points group and get the average as the cloud form distance. 
 <br/>
 Then we tried two distance algorithms. 
 </div>
@@ -410,19 +415,44 @@ Then we tried two distance algorithms.
   <ol style = "list-style-type: lower-alpha">
 
     <li> <b>Dynamic time warping</b><br/>
-    <div style = "background-color:AliceBlue;">
+    <div style = "background-color:AliceBlue;"><br/>
     Since a translation of point clouds does not change the cloud form, but results in a large difference of Euclidean distance, we try to fix the problem with Dynamic time warping (DTW). 
     <p><br/>
     If graph1 is a cloud with 3 points A, B, C and graph2 also consist of 3 points a, b, c. To compute a distance between clouds in graph1 and graph2 by the DTW algorithm, at the level of mapping, a point A in graph1 can be matched with several points a, b in graph2, because we can consider a, b as the same element of A but at different moments.
     <p/><p>
-    Let’s call this distance distDTW(graph1, graph2), first of all we need to calculate the Euclidean distance matrix (i.e. dist(A,a), dist(A,b). dist(A,c), dist(B,a)...). Based on this matrix, we can find a path from top-left to bottom-right that assures the sum of distances in this path is the minimum, and this sum is the distDTW that we waited for.
+    Let’s call this distance distDTW(graph1, graph2), first of all we need to calculate the Euclidean distance matrix (i.e. dist(A,a), dist(A,b). dist(A,c), dist(B,a)...). Based on this matrix, we can find a path from top-left to bottom-right that assures the sum of distances in this path is the minimum, and with this sum and the number of matching pairs we can compute the average distance that is the distDTW that we waited for.
+    <br/>
+    Furthermore, distDTW(graph1, graph2) and distDTW(graph2, graph1) give us the same distance and mappings, as shown the figures below:
+     <div class="q-pa-md q-gutter-sm row items-start">
+              <q-img
+                src="~assets/DTW0.png"
+                loading="lazy"
+                style="max-width: 480px; height: 300px;"
+              >
+              <div class="absolute-bottom text-subtitle2 text-center ">
+               distance(gr1, gr2), matrice 3*4    
+              </div>
+              </q-img>
+              &nbsp;
+              <q-img
+                src="~assets/DTW1.png"
+                loading="lazy"
+                style="max-width: 400px; height: 320px;"
+              >
+              <div class="absolute-bottom text-subtitle2 text-center">
+               distance(gr1, gr2), matrice 4*3    
+              </div>
+              </q-img>
+      </div>
+
+
     </p>   </div></li>
 <br/>
     However, the DTW algorithm can only go ahead from the first point to the last one, as time can’t go back. This is not the case of cloud form, so we tried another algorithm about the famous stable marriage matching problem:
-<br/>
+<br/><br/>
     <li><b>Gale–Shapley algorithm</b> (stable marriage problem)<br/>
 
-     <div style = "background-color:AliceBlue;">
+     <div style = "background-color:AliceBlue;"> <br/>
     The Gale–Shapley algorithm can produce a stable mapping of two series of elements that balances the demand of every element. 
     In our situation, we consider points in graph1 as “men”, and points in graph2 as “women” to match,
     then the algorithm is:
@@ -434,7 +464,7 @@ Then we tried two distance algorithms.
       <br/>
       <li>Repeat step 2) until a round where there is no single man.</li>
       <br/>
-      <li>Accumulate the Euclidean distance of each couple as the distance between graph1 and graph2</li>
+      <li>Accumulate the Euclidean distance of each couple as the distance between graph1 and graph2, then divide the total number of matching pairs to obtain the average distance.</li>
       </ol></div></li>
     </ol>
  </div>

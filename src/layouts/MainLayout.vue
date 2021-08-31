@@ -147,8 +147,8 @@ export default {
   },
 	methods: {
 		schemaChanged(sche) {
-			//console.log(9999999999999, this.scheme)
-			this.$store.commit('changeSchema', this.scheme);
+      this.$store.commit('showCloseGr', false); //hide the canvas for similar graph
+			this.$store.commit('changeSchema', this.scheme); //change scheme between 'UD' and 'SUD'
       api
      .changeScheme({sche :this.scheme})
      .then(response => {

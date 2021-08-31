@@ -35,9 +35,15 @@ export default {
         return API.get('types/', data); //, header);
     },
 
+    getSimilarGraph(data){
+        return API.post('graph/',data);
+    },
+
     changeScheme(data){
-        return API.put('scheme/',data)
-    }
+        return API.put('scheme/',data);
+    },
+
+
 
 
 
