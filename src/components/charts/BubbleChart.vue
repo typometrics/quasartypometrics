@@ -13,8 +13,8 @@
     <!-- </q-card-section> -->
     </div>
 
-    <div class = "col-2">
-    <div :class="{ hidden:!showClose }" style= "position: relative; width:60vh">
+    <div class = "col">
+    <div :class="{ hidden:!showClose }" style= "position: relative; width:35vw">
       <canvas id="bubble-chart1" ></canvas>
     </div> </div>
 
@@ -105,9 +105,8 @@ export default {
       return this.$store.state.showCloseGraph;
     },
     canvasWidth(){
-      var sty= (this.showClose && this.dim==2)? "position : relative; width:60vh":"position: relative; width:88vh";
-      return (this.dim==1)?"position : relative; width:400px":sty;
-      //if return sty, in 2D, the 2 graphs has the same size, while when we switch the dimension to 1D, the mainChart become too large with unknown reason 
+      var sty= (this.showClose && this.dim==2)? "position : relative; width:35vw":"position: relative; width:50vw";
+      return (this.dim==1)?"position : relative; width:44vh":sty;
     },
 
   },
@@ -119,10 +118,10 @@ export default {
       this.displayoptions.aspectRatio = newDim/2;//(newDim == 1)?2:1;
       
       this.mainChart = this.createChart(true,'bubble-chart');
-      this.mainChart.canvas.parentNode.style.width =(this.dim == 1)?'500px':'88vh';
+      this.mainChart.canvas.parentNode.style.width =(this.dim == 1)?'44vh':'88vh';
       console.log("width========= ",this.mainChart.canvas.parentNode.style.width);    
       this.closeChart = this.createChart(false,'bubble-chart1');
-      this.closeChart.canvas.parentNode.style.width ='400px';//(this.dim == 1)?'500px':'60vh';
+      this.closeChart.canvas.parentNode.style.width ='35vw';//(this.dim == 1)?'500px':'60vh';
       
     },
 

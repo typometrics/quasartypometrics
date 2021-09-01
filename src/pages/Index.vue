@@ -57,7 +57,7 @@
                 use-input
                 hide-selected
                 fill-input
-                input-debounce="300"
+                input-debounce="400"
                 :options="fxoptions"
                 @filter="filterOpt"
                 @input="getChartdata()"
@@ -77,10 +77,13 @@
               v-model="xminocc" 
               :min="0" 
               :max="100"
+              :class="{ hidden:(xtypemodel!='menzerath') }" 
               label
+              input-debounce="320"
               :label-value="(xminocc>0)?'at least '+xminocc+' occurrences for '+xmodel:'no filter on minimum occurrences for '+xmodel"
               @change="getChartdata()"
             />
+            <q-space/>
 
 
             <div class="col-2">
@@ -98,7 +101,7 @@
                 use-input
                 hide-selected
                 fill-input
-                input-debounce="300"
+                input-debounce="320"
                 :options="fyoptions"
                 @filter="filterOpt"
                 @input="getChartdata()"
@@ -114,11 +117,12 @@
               </q-select>
             </div>
 
-            <q-slider :class="{ hidden:(dimension<2) }" 
+            <q-slider :class="{ hidden:(dimension<2 || ytypemodel!='menzerath') }" 
               v-model="yminocc" 
               :min="0" 
               :max="100"
               label
+              input-debounce="320"
               :label-value="(yminocc>0)?'at least '+yminocc+' occurrences for '+ymodel:'no filter on minimum occurrences for '+ymodel"
               @change="getChartdata()"
             />
@@ -169,11 +173,6 @@
         </q-btn-dropdown>
      </q-btn-group>
               
-           <!-- 
-        <q-btn label="ClosestGraphDTW" @click="similarGraph('dtw')" color="amber-9" no-caps >
-				<q-tooltip :delay="300" content-class="text-white bg-primary" >find most similar distributions</q-tooltip>
-			</q-btn>
-      <q-list bordered class="rounded-borders">-->
            
             <q-expansion-item
                 expand-separator
@@ -404,7 +403,7 @@ export default {
 
   mounted() {
     this.$refs.bubblechart.mainChart.canvas.parentNode.style.width = (this.showCloseGr)?'50vh':"88vh",//'44vh';//'88vh';
-    this.$refs.bubblechart.closeChart.canvas.parentNode.style.width ='500px',//'44vh';//'88vh';
+    this.$refs.bubblechart.closeChart.canvas.parentNode.style.width ='35vw',//'44vh';//'88vh';
 
     this.getTypes()
 
@@ -422,7 +421,7 @@ export default {
         if(!this.showCloseGr || this.currentDist == version){
           this.showCloseGr = !this.showCloseGr;
           this.$store.commit('showCloseGr', this.showCloseGr);
-          console.log("closeGraph ",this.showCloseGr);
+          //console.log("closeGraph ",this.showCloseGr);
         }
         this.currentDist = version;
         if(this.showCloseGr){
@@ -533,7 +532,6 @@ export default {
         update(() => {
           const needle = val.toLowerCase()
           this.fxoptions = this.xoptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
-          //console.log("after filter: ", this.fxoptions);
           this.fyoptions = this.yoptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
         })
       },
@@ -586,14 +584,14 @@ export default {
       // }
         
       this.$refs.bubblechart.setData(true, this.chartdata, disopt);
-	  this.loading=false;
+	    this.loading=false;
     },
   
     getChartdata() {
       //console.log("get chart dat dimension ", this.dimension);
-		if (!(this.xoptions.includes(this.xmodel)) )
-			{console.log('choice not among options. returned');return}
-		this.loading=true;
+      if (!(this.xoptions.includes(this.xmodel)) )
+        {console.log('choice not among options. returned');return}
+      this.loading=true;
 
         const graphPara = {'axtypes': [this.xtypemodel], 'ax':[this.xmodel], 'axminocc':[this.xminocc]};
         if (this.dimension >1){ //2d
@@ -602,10 +600,10 @@ export default {
         graphPara['axminocc'].push(this.yminocc);
         }
     //todo 3d
-    this.showCloseGr = false;
-    this.$store.commit('showCloseGr', this.showCloseGr);
-		api
-		.getData({ 
+      this.showCloseGr = false;
+      this.$store.commit('showCloseGr', this.showCloseGr);
+      api
+      .getData({ 
                   axtypes : graphPara['axtypes'],  ax : graphPara['ax'],  axminocc : graphPara['axminocc'], dim: this.dimension
                   })
         .then(response => {
