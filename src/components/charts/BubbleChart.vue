@@ -14,7 +14,7 @@
     </div>
 
     <div class = "col">
-    <div :class="{ hidden:!showClose }" style= "position: relative; width:35vw">
+    <div :class="{ hidden:!showClose }" :style="dim==1?'position: relative; width:23vw':'position: relative; width:35vw'" >
       <canvas id="bubble-chart1" ></canvas>
     </div> </div>
 
@@ -106,7 +106,7 @@ export default {
     },
     canvasWidth(){
       var sty= (this.showClose && this.dim==2)? "position : relative; width:35vw":"position: relative; width:50vw";
-      return (this.dim==1)?"position : relative; width:44vh":sty;
+      return (this.dim==1)?"position : relative; width:23vw":sty;
     },
 
   },

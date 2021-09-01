@@ -402,7 +402,7 @@ export default {
   },
 
   mounted() {
-    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width = (this.showCloseGr)?'50vh':"88vh",//'44vh';//'88vh';
+    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width = (this.showCloseGr)?'35vw':"88vh",//'44vh';//'88vh';
     this.$refs.bubblechart.closeChart.canvas.parentNode.style.width ='35vw',//'44vh';//'88vh';
 
     this.getTypes()
