@@ -39,9 +39,14 @@ export default {
         return API.post('graph/',data);
     },
 
+    getGraphParam(data){
+        return API.post('graphParam/',data);
+    },
+
     changeScheme(data){
         return API.put('scheme/',data);
     },
+
 
 
 

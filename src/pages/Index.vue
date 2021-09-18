@@ -77,7 +77,7 @@
               v-model="xminocc" 
               :min="0" 
               :max="100"
-              :class="{ hidden:(xtypemodel!='menzerath') }" 
+              :class="{ hidden:(xtypemodel=='treeHeight') }" 
               label
               input-debounce="320"
               :label-value="(xminocc>0)?'at least '+xminocc+' occurrences for '+xmodel:'no filter on minimum occurrences for '+xmodel"
@@ -117,7 +117,7 @@
               </q-select>
             </div>
 
-            <q-slider :class="{ hidden:(dimension<2 || ytypemodel!='menzerath') }" 
+            <q-slider :class="{ hidden:(dimension<2 || ytypemodel=='treeHeight') }" 
               v-model="yminocc" 
               :min="0" 
               :max="100"
@@ -142,7 +142,7 @@
             </q-btn-group>
 
             <q-btn-group spread glossy :class="{ hidden:noResults }" >
-            <q-btn label="Closestgraph" @click="similarGraph('dep')" color="red-12" no-caps >
+            <q-btn label="closestGraph" @click="similarGraph('dep')" color="red-12" no-caps >
 				<q-tooltip :delay="300" content-class="text-white bg-primary" >find most similar distributions</q-tooltip>
 			</q-btn>
       
@@ -187,8 +187,10 @@
                   :data="rows"
                   :columns="columns"
                   row-key="name"
+                  @row-click="onRowClick"
                   :filter="filter"
                   v-model:pagination="pagination"
+                  
                   
                 >
                 <template v-slot:top-right>
@@ -280,14 +282,15 @@ function savePngAs(blob,filename ) {
 }
 
 const columns = [
-  { name: 'desc',
+  { name: 'graph name',
     required: true,
     label: 'graph name',
     align: 'left',
     field: 'name',
     sortable: true
     },
-    { name: 'distance', align: 'center', label: 'distance', field: 'distance', sortable: true },
+    { name: 'distance', required: true, align: 'center', label: 'distance', field: 'distance', sortable: true }
+
 ]
 const distTitle = {
   'dep':'language distribution',
@@ -331,7 +334,7 @@ export default {
       xminocc:0,
       yminocc:0,
       xymax:100,
-      xlimMax:100,
+      //xlimMax:100,
       xlimMin:0,
       squareit: false,
       showCloseGr: false,
@@ -362,12 +365,12 @@ export default {
       filter: '',
       loadingTable: false,//ref(false),
       pagination: {
-      sortBy: 'desc',
-      descending: false,
-      page: 1,
-      rowsPerPage: 10,
-      rowsNumber: 40
-    }
+        sortBy: 'distance',
+        descending: false,
+        page: 1,
+        rowsPerPage: 10,
+        rowsNumber: 40
+      }
 
      
     };
@@ -450,6 +453,24 @@ export default {
         }
    },
     // chartdata() {return this.getChartdata()},
+    onRowClick(evt, row) {
+      console.log('--------clicked on', row.name, "with dist ", row.distance)
+      api
+      .getGraphParam({
+        name:row.name, dim:this.dimension })
+      .then(response => {
+                var r_xtype = response.data.types;
+                var r_ax = response.data.ax;
+                this.drawClose(r_xtype,r_ax)
+            })
+            .catch(error => {
+                this.$q.notify({
+                message: `get similar Graphs in row: ${error}`,
+                color: "negative",
+                position: "bottom"
+                });
+            });
+    },
     
     setDimension(dim){
       this.dimension = dim;
@@ -572,7 +593,7 @@ export default {
       var disopt = this.getDisplayOptions(this.xtypemodel,this.xmodel,this.ytypemodel,this.ymodel,this.xlimMin);
       if (this.squareit && (this.dimension>1)) {
         disopt.scales.yAxes[0].ticks = {min:0, max:this.xymax};
-        disopt.scales.xAxes[0].ticks = {min:0, max:this.xlimMax, fontFamily: 'Lato',
+        disopt.scales.xAxes[0].ticks = {min:0, max:this.xymax, fontFamily: 'Lato',
            fontColor: "#abc",
            fontSize: 12,
            };
@@ -602,6 +623,9 @@ export default {
     //todo 3d
       this.showCloseGr = false;
       this.$store.commit('showCloseGr', this.showCloseGr);
+      // if(this.showCloseGr){
+      //   this.similarGraph(this.currentDist)
+      // }
       api
       .getData({ 
                   axtypes : graphPara['axtypes'],  ax : graphPara['ax'],  axminocc : graphPara['axminocc'], dim: this.dimension
@@ -610,7 +634,7 @@ export default {
             this.nblang = response.data.nblang;
             console.log(this.nblang);
             this.xymax = response.data.xymax;
-            this.xlimMax = response.data.xlimMax;
+            //this.xlimMax = response.data.xlimMax;
             this.xlimMin = response.data.xlimMin;
             this.$q.notify({
               message: `That worked! Check out the cloud of `+this.nblang+` languages!`,
@@ -629,10 +653,10 @@ export default {
                   }
                   else this.chartdata.splice(index,1)
                 }
-                console.log("lang2data",lang2data)
+                //console.log("lang2data",lang2data)
                 for (var la in lang2data)
                 {
-                  console.log("la",la);
+                  //console.log("la",la);
                   this.chartdata.push(lang2data[la])
                 }
               }

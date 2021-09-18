@@ -47,8 +47,8 @@
       <p >
       <h5 class = "subtitle">Definition of typometrics</h5>
 
-      Typometrics is the open field of the study of the distribution of languages in a distributional scatter diagram based on empirical measures on corpora, raw or annotated. 
-      It is a sub field of quantitative typology that attempts to compare languages. In some sense, typometrics is typology without types 
+     Typometrics is the open field of the study of the distribution of languages in a distributional scatter diagram based on empirical measures on raw or annotated corpora.
+     It is a sub field of quantitative typology that attempts to compare languages. In some sense, typometrics is typology without types 
       <a href = "https://www.glossa-journal.org/article/id/5397/" class = "link"> (Gerdes et al. 2021)</a>
       </p>
 
@@ -68,8 +68,7 @@
       <br/><br/>
       Furthermore, any measure with less than 50 occurrences is removed from the dataset in order to assure significant measurements.
       <br/><br/>
-      From these measurements and scatter plots, we can interpret each one and two-dimensional graph by analysing the cloud form
-       with different patterns (see <span class = 'section'>Interpretation of graphs</span>) 
+      From these measurements and scatter plots, we can interpret each one-dimensional and two-dimensional graph by analysing the cloud form with different patterns (see <span class = 'section'>Interpretation of graphs</span>) 
        and computations of distance between graphs (see <span class = 'section'>Similarity measures</span> ). 
        </p>
 
@@ -100,8 +99,7 @@ For example, the result of measurement on ‘subj’ direction of English is 7.2
              The following measure type allows for more fine-grained observations:
 
              <h6 class = "subtitle">Direction-cfc </h6>
-             “cfc” stands for category-function-category for each dependency relation consisting of head-function-dependent,
-              e.g. the couple (I, ‘m) in the sentence “I’m happy” is an instance of AUX-subj-PRON, where C = AUX, F = subj and
+             “cfc” stands for category-function-category for each dependency relation consisting of head-function-dependent, e.g. the couple (She, is) in the sentence “She is happy”  is an instance of AUX-subj-PRON, where C = AUX, F = subj and
                the dependent’s C = PRON. Similar to “direction”, “direction-cfc” measures the percentage of <b>head-initial cfc </b>relations in a language.
           </p>
         </p>
@@ -201,7 +199,7 @@ a. I’ll <b>give</b> some <b>to my good friend from Akron</b>. </div>
 <div style = "text-indent:30px;">
 b. I’ll <b>give to my good friend from Akron</b some.<br/>
 </div>
-‘some’ is a “light constituent” and “to my good friend from Akron” is much heavier than “some”.
+‘some’ is a “light constituent” and “to my good friend from Akron” is much heavier than “some”. As a result the b. sentence is awkward because the heavy constituent appears before the light constituent. 
        </div>
        <br/>
        With this measure, we study the co-effect of <i>Menzerath-Altmann law (MAL)</i> 
@@ -223,15 +221,15 @@ Moreover, by comparing the average value of a and c, we can observe that a
 &lt;
  c,  which explains the co-effect of MAL and HCS.
 
-We trust that more information can be found out from these analysis results about Menzerath. 
+We trust that further interesting phenomena can be observed on the different Menzerath plots. 
 </div>        
         </p>
 
       <div id = 'graphs'>
         <hr/>
       <h4 class = "title">Intepretation of graphs</h4>
-      The measurement results are visualised on 1D and 2D scatter plots. 
-We can not only compare the commun sides and the differences of languages in a “measure:function” type by unidimensionnel graphs but also study the co-effects of two different “measure:function” types by bidimensionnel graphs.
+      The measurement results are visualised on 1D and 2D scatter plots. <br/>
+One-dimensional plots allow us to visualize the distribution of the various measures we have performed on the treebanks, two-dimensional plots bring two measures in relation to one another.
 
 
        <h5 class = "subtitle">Graph details (makers and colors ) </h5>
@@ -295,11 +293,11 @@ We can not only compare the commun sides and the differences of languages in a �
           style="max-width: 21px; height: 21px;"/>
           </div>
     </li>
-  <li><div>Tupian: green star &nbsp;
+  <li><div>Tupian: grey star &nbsp;
     <q-img
-          src="~assets/greenStar1.png"
+          src="~assets/greyStar.png"
           loading="lazy"
-          style="max-width: 20px; height: 20px;"/>
+          style="max-width: 22px; height: 22px;"/>
           </div>
     </li>
 
@@ -338,7 +336,7 @@ The language families of these languages contain less than 5 languages in our da
 The two-dimensional diagram “direction subj:: comp: obj” below visualises the percentage of subjects and objects on the right of the verb (V) on average, followed by a graph with a part of this diagram.
 <br/>
 <br/>
-The position of a language point depends on the analysis results of this language on measures of axis x and y. For example, 0.386% of subjects and 7.351% of objects in Japanese are on the right of the governor. As a consequence, we put the japanese point at the left-bottom corner of the diagram. By taking the same measures on all treebanks, we obtain the 2D scatter plot.
+The position of a language point depends on the analysis results of this language on measures of axis x and y. For example, 0.386% of subjects and 7.351% of objects in Japanese are on the right of the governor. As a consequence, we put the Japanese point at the left-bottom corner of the diagram. By taking the same measures on all treebanks, we obtain the 2D scatter plot.
              <div class="q-pa-md q-gutter-sm row items-start">
                 <q-img
                 src="~assets/graph2dPart.png"
@@ -361,12 +359,11 @@ The position of a language point depends on the analysis results of this languag
               </q-img>
             </div>
   </div>
-  Some of the language clouds have specific recognizable geometric forms 
-  such as for the following graph (Figure2 of the typometrics article Gerdes et al. 2021) that shows the percentage of pronominal versus
-  nominal objects on the right of the verb：we can recognize triangle pattern.
+  Some of the language clouds have specific recognizable geometric forms, such as for the following graph  (Figure2 of the typometrics article Gerdes et al. 2021) that shows the percentage of pronominal versus nominal objects on the right of the verb:, we can recognize a triangle pattern.
+
   <br/><br/>
-  As we can see, in this figure, y &#62; x is almost true, therefore, we can conclude that for almost every language, the percentage of nominal objects on the right of its
-  verbs is more than that of pronominal objects following a verb as its governor.  
+  As we can see, in this figure, y &#62; x is almost true, therefore, we can conclude that for almost every language, the percentage of nominal objects on the right of its verbs is more than that of pronominal objects following a verb as its governor.  
+
 
  <div class="q-pa-md q-gutter-sm row items-start">
                 <q-img
@@ -405,7 +402,7 @@ To obtain the results, for each language in both graph1 and graph2, we compute t
 </div>
 
 <h6 class = "subtitle">Cloud form</h6>
-<div>To compare the similarity between clouds in two graphs (named graph1 and graph2), we don’t consider points labels (i.e. language names) any more, so that only points positions make sense. In other words, We want to form graph2 with points in graph1 no matter which language a point represents. 
+<div>To compare the similarity between clouds in two graphs (named graph1 and graph2), we do not consider points labels (i.e. language names), so that only the points’ positions are taken into account. In other words, We want to form graph2 with the points of graph1 no matter which language a point represents.  
 <br/>
 In this case, a mapping is necessary to match points from one graph to another, then we can compute the Euclidean distance between each matched points group and get the average as the cloud form distance. 
 <br/>
@@ -420,9 +417,11 @@ Then we tried two distance algorithms.
     <p><br/>
     If graph1 is a cloud with 3 points A, B, C and graph2 also consist of 3 points a, b, c. To compute a distance between clouds in graph1 and graph2 by the DTW algorithm, at the level of mapping, a point A in graph1 can be matched with several points a, b in graph2, because we can consider a, b as the same element of A but at different moments.
     <p/><p>
-    Let’s call this distance distDTW(graph1, graph2), first of all we need to calculate the Euclidean distance matrix (i.e. dist(A,a), dist(A,b). dist(A,c), dist(B,a)...). Based on this matrix, we can find a path from top-left to bottom-right that assures the sum of distances in this path is the minimum, and with this sum and the number of matching pairs we can compute the average distance that is the distDTW that we waited for.
+Let’s call this distance distDTW(graph1, graph2), first of all we need to calculate the Euclidean distance matrix (i.e. dist(A,a), dist(A,b). dist(A,c), dist(B,a)...). Based on this matrix, we can find a path from top-left to bottom-right that assures the sum of distances in this path is minimal, and with this sum and the number of matching pairs we can compute the average distance, which is the distDTW that we wanted.
+
     <br/>
-    Furthermore, distDTW(graph1, graph2) and distDTW(graph2, graph1) give us the same distance and mappings, as shown the figures below:
+    Furthermore, the distance is symmetrical: distDTW(graph1, graph2) and distDTW(graph2, graph1) give us the same distance and mappings, as shown the figures below:
+
      <div class="q-pa-md q-gutter-sm row items-start">
               <q-img
                 src="~assets/DTW0.png"
@@ -448,7 +447,8 @@ Then we tried two distance algorithms.
 
     </p>   </div></li>
 <br/>
-    However, the DTW algorithm can only go ahead from the first point to the last one, as time can’t go back. This is not the case of cloud form, so we tried another algorithm about the famous stable marriage matching problem:
+	However, the DTW algorithm can only go ahead from the first point to the last one, as time can’t go back. This is not the case of a two-dimensional cloud form, so we used a different algorithm based on the famous stable marriage matching problem:
+
 <br/><br/>
     <li><b>Gale–Shapley algorithm</b> (stable marriage problem)<br/>
 
