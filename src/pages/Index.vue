@@ -17,15 +17,6 @@
         <q-form class="q-gutter-md">
           <div class="column q-gutter-lg  justify-center">
                   <q-space />
-            <!-- <div class="col-2">
-              <q-select
-                v-model="scheme"
-                :options="schemeoptions"
-                @input="getOptions()"
-                label="annotation scheme"
-              /> 
-            </div> 
-             -->
 
             
             <div class="q-gutter-y-lg" >
@@ -76,7 +67,7 @@
             <q-slider 
               v-model="xminocc" 
               :min="0" 
-              :max="100"
+              :max="this.freqMax[0]"
               :class="{ hidden:(xtypemodel=='treeHeight') }" 
               label
               input-debounce="320"
@@ -120,7 +111,7 @@
             <q-slider :class="{ hidden:(dimension<2 || ytypemodel=='treeHeight') }" 
               v-model="yminocc" 
               :min="0" 
-              :max="100"
+              :max="this.freqMax[1]" 
               label
               input-debounce="320"
               :label-value="(yminocc>0)?'at least '+yminocc+' occurrences for '+ymodel:'no filter on minimum occurrences for '+ymodel"
@@ -222,6 +213,7 @@
             v-model="squareit" 
             label="square the chart" 
             icon="border_all"
+            :class="{ hidden:(dimension<2 || ytypemodel!=xtypemodel) }" 
             @input="drawit"
             />
           <q-knob
@@ -333,8 +325,8 @@ export default {
       nblang:0,
       xminocc:0,
       yminocc:0,
+      freqMax:[100,100],
       xymax:100,
-      //xlimMax:100,
       xlimMin:0,
       squareit: false,
       showCloseGr: false,
@@ -363,7 +355,7 @@ export default {
       rows: [{name:'self',distance:0.}],
       columns,
       filter: '',
-      loadingTable: false,//ref(false),
+      loadingTable: false,
       pagination: {
         sortBy: 'distance',
         descending: false,
@@ -410,11 +402,6 @@ export default {
 
     this.getTypes()
 
-    // get initial data from server (1st page)
-    // onRequest({
-    //     pagination: pagination.value,
-    //     filter: undefined
-    //   })
     
     // this.getChartdata();
   },
@@ -428,31 +415,35 @@ export default {
         }
         this.currentDist = version;
         if(this.showCloseGr){
-            const mytyp = (this.dimension==1)?[this.xtypemodel]:[this.xtypemodel,this.ytypemodel];
-            const myax = (this.dimension==1)?[this.xmodel]:[this.xmodel,this.ymodel];
-            console.log("dist version ",version);
-            api
-            .getSimilarGraph({
-                typ: mytyp, ax:myax, version:version,dim:this.dimension
-            })
-            .then(response => {
-                var cl_xtype = response.data.types;
-                var cl_ax = response.data.ax;
-                var cl_dist = response.data.distance;
-                this.rows = response.data.rows;
-                console.log("closest graph ", cl_xtype," ", cl_ax, " ", cl_dist);
-                this.drawClose(cl_xtype,cl_ax)
-            })
-            .catch(error => {
-                this.$q.notify({
-                message: `get similar Graphs: ${error}`,
-                color: "negative",
-                position: "bottom"
-                });
-            });
+            this.updateSimilarGraph(version);
         }
    },
-    // chartdata() {return this.getChartdata()},
+
+    updateSimilarGraph(version){
+      const mytyp = (this.dimension==1)?[this.xtypemodel]:[this.xtypemodel,this.ytypemodel];
+      const myax = (this.dimension==1)?[this.xmodel]:[this.xmodel,this.ymodel];
+      console.log("dist version ",version);
+      api
+      .getSimilarGraph({
+          typ: mytyp, ax:myax, version:version,dim:this.dimension
+      })
+      .then(response => {
+          var cl_xtype = response.data.types;
+          var cl_ax = response.data.ax;
+          var cl_dist = response.data.distance;
+          this.rows = response.data.rows;
+          console.log("closest graph ", cl_xtype," ", cl_ax, " ", cl_dist);
+          this.drawClose(cl_xtype,cl_ax)
+      })
+      .catch(error => {
+           this.$q.notify({
+           message: `get similar Graphs: ${error}`,
+           color: "negative",
+           position: "bottom"
+         });
+      });
+    },
+
     onRowClick(evt, row) {
       console.log('--------clicked on', row.name, "with dist ", row.distance)
       api
@@ -474,6 +465,7 @@ export default {
     
     setDimension(dim){
       this.dimension = dim;
+      this.showCloseGr = false;
       this.$store.commit('showCloseGr', false);
       this.labelrotation = 0;
       //if (dim == 1){ this.labelrotation = 90;}
@@ -621,11 +613,9 @@ export default {
         graphPara['axminocc'].push(this.yminocc);
         }
     //todo 3d
-      this.showCloseGr = false;
-      this.$store.commit('showCloseGr', this.showCloseGr);
-      // if(this.showCloseGr){
-      //   this.similarGraph(this.currentDist)
-      // }
+      if(this.showCloseGr){
+         this.updateSimilarGraph(this.currentDist);
+       }
       api
       .getData({ 
                   axtypes : graphPara['axtypes'],  ax : graphPara['ax'],  axminocc : graphPara['axminocc'], dim: this.dimension
@@ -634,8 +624,8 @@ export default {
             this.nblang = response.data.nblang;
             console.log(this.nblang);
             this.xymax = response.data.xymax;
-            //this.xlimMax = response.data.xlimMax;
             this.xlimMin = response.data.xlimMin;
+            this.freqMax = response.data.freqMax;
             this.$q.notify({
               message: `That worked! Check out the cloud of `+this.nblang+` languages!`,
               color: "positive",
@@ -685,7 +675,6 @@ export default {
             const nblang = response.data.nblang;
             console.log(nblang);
             //const xymax = response.data.xymax;
-            //const xlimMax = response.data.xlimMax;
             this.$q.notify({
               message: `That worked! Check out the cloud of`+ nblang+` languages!`, color: "positive", position: "bottom"
             });
