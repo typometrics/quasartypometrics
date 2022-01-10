@@ -382,6 +382,7 @@ export default {
       noResults(){
         //hide 'similar graph' buttons of options for which we have no relevant results 
         if(this.dimension == 2 && (this.xtypemodel!='distribution' || this.ytypemodel != 'distribution')){
+          this.$store.commit('showCloseGr', false)
           return true;
         }
         
