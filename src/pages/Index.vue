@@ -39,6 +39,7 @@
                 :options="xtypeoptions"
                 @input="getOptions()"
                 label="measure x-Axis"
+                
               />
             </div>
 
@@ -83,6 +84,7 @@
                 :options="ytypeoptions"
                 @input="getOptions()"
                 label="measure y-Axis"
+                
               />
             </div>
 
@@ -309,7 +311,7 @@ export default {
       chartdata: null,
       closeChartdata:null,
       plotData: null,
-      //scheme:'SUD',
+      scheme:'SUD',
       //schemeoptions:['SUD', 'UD'],
       xtypemodel: 'direction',
       ytypemodel: 'direction',
@@ -383,7 +385,7 @@ export default {
           return true;
         }
         
-        var isInf = (this.$store.state.sche == 'UD' && (this.xmodel.slice(0,2)=='nb'||(this.xtypemodel=='distribution'&& this.xmodel=='total')));        
+        var isInf = (this.scheme == 'UD' && (this.xmodel.slice(0,2)=='nb'||(this.xtypemodel=='distribution'&& this.xmodel=='total')));        
         return isInf || (this.xtypemodel=='treeHeight' || this.ytypemodel == 'treeHeight');
 
       }
@@ -392,9 +394,9 @@ export default {
 	  watch: {
       schema (newSchema, oldSchema) {
         console.log(`We have ${newSchema} now, yay!`);
-        //this.scheme=newSchema;
         this.getOptions()
-
+        this.scheme=newSchema;
+        
       }
   },
 
@@ -499,11 +501,11 @@ export default {
     
     goodSelection(opts) {
       console.log("goodSelection");
-      if (this.$store.state.sche == 'SUD'){
+      if (this.scheme == 'SUD'){
         if (opts.includes('subj')) return 'subj'
         if (opts.includes('VERB-comp:obj-NOUN')) return 'VERB-comp:obj-NOUN'
       }
-      if (this.$store.state.sche == 'UD'){
+      if (this.scheme == 'UD'){
         if (opts.includes('nsubj')) return 'nsubj'
         if (opts.includes('obj')) return 'obj'
       }
@@ -520,6 +522,8 @@ export default {
       var yoptions = await this.getRelationsOptions(this.ytypemodel);
       if ((yoptions !== undefined) && !yoptions.includes(this.ymodel)) this.ymodel = this.goodSelection(yoptions);
       this.yoptions = yoptions;
+
+      //setTimeout(() => {this.getChartdata()}, 300);
 
       this.getChartdata();
     },
