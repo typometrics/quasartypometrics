@@ -119,18 +119,6 @@
             />
 
 
-            <!-- <div class="col-1">
-              <q-btn label="Show" dense type="submit" color="primary" no-caps />
-            </div> -->
-            <!-- <q-btn label="Download graph" color="primary" no-caps dense/> red-6-->
-            <q-btn-group spread>
-              <q-btn flat dense icon="cloud_download" color="primary" @click="downloadGraphAsPng()">
-                <q-tooltip :delay="300" content-class="text-white bg-primary" >download the graph as png</q-tooltip>
-              </q-btn>
-              <q-btn flat dense icon="cloud_download" color="orange" @click="exportData()">
-                <q-tooltip :delay="300" content-class="text-white bg-secondary" >export data as .json</q-tooltip>
-              </q-btn>
-            </q-btn-group>
 
             <q-btn-group spread glossy :class="{ hidden:noResults }" >
             <q-btn label="closestGraph" @click="similarGraph('dep')" color="red-12" no-caps >
@@ -170,7 +158,7 @@
                 icon="assessment"
                 :label="'DISTANCE TABLE: '+distTitle[currentDist]"
                 header-class="text-black"
-                :class="{ hidden:!this.showCloseGr }" 
+                :class="{ hidden:!this.$store.state.showCloseGraph }" 
             >
             <div class="q-pa-md">
                 <q-table
@@ -181,6 +169,7 @@
                   @row-click="onRowClick"
                   :filter="filter"
                   v-model:pagination="pagination"
+                  style="position:relative"
                   
                   
                 >
@@ -194,6 +183,19 @@
                 </q-table>
                 </div>
             </q-expansion-item>
+
+            <!-- <div class="col-1">
+              <q-btn label="Show" dense type="submit" color="primary" no-caps />
+            </div> -->
+            <!-- <q-btn label="Download graph" color="primary" no-caps dense/> red-6-->
+            <q-btn-group spread>
+              <q-btn flat dense icon="cloud_download" color="primary" @click="downloadGraphAsPng()">
+                <q-tooltip :delay="300" content-class="text-white bg-primary" >download the graph as png</q-tooltip>
+              </q-btn>
+              <q-btn flat dense icon="cloud_download" color="orange" @click="exportData()">
+                <q-tooltip :delay="300" content-class="text-white bg-secondary" >export data as .json</q-tooltip>
+              </q-btn>
+            </q-btn-group>
 
 
           </div>
@@ -307,8 +309,8 @@ export default {
       chartdata: null,
       closeChartdata:null,
       plotData: null,
-      scheme:'SUD',
-      schemeoptions:['SUD', 'UD'],
+      //scheme:'SUD',
+      //schemeoptions:['SUD', 'UD'],
       xtypemodel: 'direction',
       ytypemodel: 'direction',
       xtypeoptions: ["direction", "distance", "distribution"],
@@ -329,7 +331,7 @@ export default {
       xymax:100,
       xlimMin:0,
       squareit: false,
-      showCloseGr: false,
+      //showCloseGr: false,
       currentDist:'dep',
       distTitle,
       labeldisplay: 'auto',
@@ -381,7 +383,7 @@ export default {
           return true;
         }
         
-        var isInf = (this.scheme == 'UD' && (this.xmodel.slice(0,2)=='nb'||(this.xtypemodel=='distribution'&& this.xmodel=='total')));        
+        var isInf = (this.$store.state.sche == 'UD' && (this.xmodel.slice(0,2)=='nb'||(this.xtypemodel=='distribution'&& this.xmodel=='total')));        
         return isInf || (this.xtypemodel=='treeHeight' || this.ytypemodel == 'treeHeight');
 
       }
@@ -390,14 +392,14 @@ export default {
 	  watch: {
       schema (newSchema, oldSchema) {
         console.log(`We have ${newSchema} now, yay!`);
-        this.scheme=newSchema;
+        //this.scheme=newSchema;
         this.getOptions()
 
       }
   },
 
   mounted() {
-    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width = (this.showCloseGr)?'35vw':"88vh",//'44vh';//'88vh';
+    this.$refs.bubblechart.mainChart.canvas.parentNode.style.width = (this.$store.state.showCloseGraph)?'35vw':"88vh",//'44vh';//'88vh';
     this.$refs.bubblechart.closeChart.canvas.parentNode.style.width ='35vw',//'44vh';//'88vh';
 
     this.getTypes()
@@ -406,15 +408,15 @@ export default {
     // this.getChartdata();
   },
   methods: {
-    similarGraph(version) { // used for testing with the test button, to be commented out for production
+    similarGraph(version) { 
         console.log('similarity...');
-        if(!this.showCloseGr || this.currentDist == version){
-          this.showCloseGr = !this.showCloseGr;
-          this.$store.commit('showCloseGr', this.showCloseGr);
+        if(!this.$store.state.showCloseGraph || this.currentDist == version){
+          //this.showCloseGr = !this.$store.state.showCloseGraph;
+          this.$store.commit('showCloseGr', !this.$store.state.showCloseGraph);//this.showCloseGr);
           //console.log("closeGraph ",this.showCloseGr);
         }
         this.currentDist = version;
-        if(this.showCloseGr){
+        if(this.$store.state.showCloseGraph){
             this.updateSimilarGraph(version);
         }
    },
@@ -465,7 +467,7 @@ export default {
     
     setDimension(dim){
       this.dimension = dim;
-      this.showCloseGr = false;
+      //this.showCloseGr = false;
       this.$store.commit('showCloseGr', false);
       this.labelrotation = 0;
       //if (dim == 1){ this.labelrotation = 90;}
@@ -497,11 +499,11 @@ export default {
     
     goodSelection(opts) {
       console.log("goodSelection");
-      if (this.scheme == 'SUD'){
+      if (this.$store.state.sche == 'SUD'){
         if (opts.includes('subj')) return 'subj'
         if (opts.includes('VERB-comp:obj-NOUN')) return 'VERB-comp:obj-NOUN'
       }
-      if (this.scheme == 'UD'){
+      if (this.$store.state.sche == 'UD'){
         if (opts.includes('nsubj')) return 'nsubj'
         if (opts.includes('obj')) return 'obj'
       }
@@ -613,7 +615,7 @@ export default {
         graphPara['axminocc'].push(this.yminocc);
         }
     //todo 3d
-      if(this.showCloseGr){
+      if(this.$store.state.showCloseGraph){
          this.updateSimilarGraph(this.currentDist);
        }
       api
@@ -631,26 +633,28 @@ export default {
               color: "positive",
               position: "bottom"
             });
-            if (this.chartdata) // copy into old data to get the dots moving
-              {
-                const lang2data = response.data.chartdata.reduce(function(result, item) {
-                    result[item.label[0]] = item; return result}, {});
+            
+            // if (this.chartdata) // copy into old data to get the dots moving
+            //   {
+            //     const lang2data = response.data.chartdata.reduce(function(result, item) {
+            //         result[item.label[0]] = item; return result}, {});
 
-                for (let [index, la] of this.chartdata.entries()) {
-                  if (la.label[0] in lang2data) {
-                    la.data = lang2data[la.label[0]].data;
-                    delete lang2data[la.label[0]];
-                  }
-                  else this.chartdata.splice(index,1)
-                }
-                //console.log("lang2data",lang2data)
-                for (var la in lang2data)
-                {
-                  //console.log("la",la);
-                  this.chartdata.push(lang2data[la])
-                }
-              }
-            else this.chartdata = response.data.chartdata;  
+            //     for (let [index, la] of this.chartdata.entries()) {
+            //       if (la.label[0] in lang2data) {
+            //         la.data = lang2data[la.label[0]].data;
+            //         delete lang2data[la.label[0]];
+            //       }
+            //       else this.chartdata.splice(index,1)
+            //     }
+            //     //console.log("lang2data",lang2data)
+            //     for (var la in lang2data)
+            //     {
+            //       //console.log("la",la);
+            //       this.chartdata.push(lang2data[la])
+            //     }
+            //   }
+            // else this.chartdata = response.data.chartdata;  
+            this.chartdata = response.data.chartdata;  
             this.drawit();
           })
         .catch(error => {

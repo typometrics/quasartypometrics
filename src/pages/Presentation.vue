@@ -561,6 +561,7 @@ export default {
   data(){
     console.log("presentation current page ", this.$route);
     this.$store.commit('setPage', false);
+    this.$store.commit('showCloseGr', false);
 
     function toSection(id){
       console.log("section data");
