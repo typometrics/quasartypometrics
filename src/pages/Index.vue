@@ -34,12 +34,12 @@
 
 
             <div class="col-2">
+              <!--begin with the y axis for 1D graph and 2D graph-->
               <q-select
                 v-model="xtypemodel"
                 :options="xtypeoptions"
                 @input="getOptions()"
-                label="measure x-Axis"
-                
+                label="measure y-Axis" 
               />
             </div>
 
@@ -53,7 +53,7 @@
                 :options="fxoptions"
                 @filter="filterOpt"
                 @input="getChartdata()"
-                label="x-Axis" 
+                label="y-Axis" 
               >
                 <template v-slot:no-option>
                   <q-item>
@@ -79,11 +79,12 @@
 
 
             <div class="col-2">
+              <!--the x axis for 2D graphs-->
               <q-select :class="{ hidden:(dimension<2) }" 
                 v-model="ytypemodel"
                 :options="ytypeoptions"
                 @input="getOptions()"
-                label="measure y-Axis"
+                label="measure x-Axis"
                 
               />
             </div>
@@ -98,7 +99,7 @@
                 :options="fyoptions"
                 @filter="filterOpt"
                 @input="getChartdata()"
-                label="y-Axis"
+                label="x-Axis"
               >
                 <template v-slot:no-option>
                   <q-item>
