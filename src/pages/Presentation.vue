@@ -6,7 +6,6 @@
       font-family: Arial;*/
       color:rgb(0, 0, 102);
       font-family:verdana;
-      /*background-color:GhostWhite*/
       
     }
 
@@ -197,7 +196,7 @@ For example, in the following sentences (from Ross (1967:306)):
 <div style = "text-indent:30px;">
 a. I’ll <b>give</b> some <b>to my good friend from Akron</b>. </div>
 <div style = "text-indent:30px;">
-b. I’ll <b>give to my good friend from Akron</b some.<br/>
+b. I’ll <b>give to my good friend from Akron</b> some.<br/>
 </div>
 ‘some’ is a “light constituent” and “to my good friend from Akron” is much heavier than “some”. As a result the b. sentence is awkward because the heavy constituent appears before the light constituent. 
        </div>
@@ -476,7 +475,9 @@ Let’s call this distance distDTW(graph1, graph2), first of all we need to calc
         </div>
         <br/>
         <div>
-        <b>Contact</b>:  https://gerdes.fr
+        <b>Contact</b>: </br>
+         https://gerdes.fr</br>
+         Site building and explanation by <a href = "https://gerdes.fr" class = "link">Kim Gerdes</a> and  <a href = "https://github.com/ziqianPeng" class = "link">Ziqian Peng</a>
         </div>
 
        <h5 class = "subtitle">References </h5>
@@ -485,9 +486,9 @@ Let’s call this distance distDTW(graph1, graph2), first of all we need to calc
          1. Gerdes K. & Kahane S. & Chen X., (2021) <i>“Typometrics: From Implicational to Quantitative Universals in Word Order Typology”</i>, Glossa: a journal of general linguistics 6(1), p.17. doi: https://doi.org/10.5334/gjgl.764
 <br/>2. Chen X., Gerdes K., Kahane S., Courtin M. (2021) <i>The Co-Effect of Menzerath-Altmann Law and Heavy Constituent Shift in Natural Languages</i>. Qualico.
 <br/>
-3. code of typometrics project:<a href = "https://github.com/typometrics" class = "link"> https://github.com/typometrics</a> <br/>
+3. Code of typometrics project:<a href = "https://github.com/typometrics" class = "link"> https://github.com/typometrics</a> <br/>
 4. Stable Matchings in Metric Spaces: <a href = "https://arxiv.org/pdf/1710.05262.pdf" class = "link"> https://arxiv.org/pdf/1710.05262.pdf</a> <br/>
-5. dynamic time warping:<a href = "https://github.com/talcs/simpledtw" class = "link"> https://github.com/talcs/simpledtw </a><br/>
+5. Dynamic time warping:<a href = "https://github.com/talcs/simpledtw" class = "link"> https://github.com/talcs/simpledtw </a><br/>
 <br/><br/>
 </div>
       </div>
