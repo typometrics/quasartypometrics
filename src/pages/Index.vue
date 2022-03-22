@@ -39,7 +39,7 @@
                 v-model="xtypemodel"
                 :options="xtypeoptions"
                 @input="getOptions()"
-                label="measure y-Axis" 
+                :label="(this.dimension>1)?'measure x-Axis':'measure y-Axis'" 
               />
             </div>
 
@@ -53,7 +53,7 @@
                 :options="fxoptions"
                 @filter="filterOpt"
                 @input="getChartdata()"
-                label="y-Axis" 
+                :label="(this.dimension>1)?'x-Axis':'y-Axis'" 
               >
                 <template v-slot:no-option>
                   <q-item>
@@ -84,7 +84,7 @@
                 v-model="ytypemodel"
                 :options="ytypeoptions"
                 @input="getOptions()"
-                label="measure x-Axis"
+                label="measure y-Axis"
                 
               />
             </div>
@@ -99,7 +99,7 @@
                 :options="fyoptions"
                 @filter="filterOpt"
                 @input="getChartdata()"
-                label="x-Axis"
+                label="y-Axis"
               >
                 <template v-slot:no-option>
                   <q-item>
@@ -814,7 +814,7 @@ export default {
 
             scaleLabel: {
               display: this.dimension>1,
-              labelString: ymodel
+              labelString: xmodel
             }
           }],
 
@@ -826,7 +826,7 @@ export default {
 
             scaleLabel: {
               display: true,
-              labelString: xmodel,
+              labelString:(this.dimension>1)?ymodel:xmodel
             }
           }]
         },
