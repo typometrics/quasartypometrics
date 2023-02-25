@@ -29,3 +29,7 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 The server has to point to 	/home/typometrics/quasartypometrics/dist/spa;
 
 check deployment/djangocloeditor for an nginx configuration
+
+### possible errors and fixes
+
+* if you have a *digital envelope routines::unsupported* error, try `export NODE_OPTIONS=--openssl-legacy-provider` before starting quasar
