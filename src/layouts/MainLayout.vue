@@ -25,7 +25,7 @@
 		v-model="scheme"
 		:options="schemeoptions"
 		@input="schemaChanged()"
-		label="annotation scheme"
+		label="Treebank version 2.11"
 		/>
 
     
@@ -92,7 +92,7 @@
  -->
 
         &nbsp;
-        &nbsp;<div>&nbsp;Typometrics v{{ 0.99 }}</div>
+        &nbsp;<div>&nbsp;Typometrics v{{ 1.0 }}</div>
       </q-toolbar>
     </q-header>
 <!-- show-if-above -->
