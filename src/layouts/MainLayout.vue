@@ -36,10 +36,10 @@
         no-caps
         stretch
         unelevated
-        color="orange-14"
         text-color="white"
         to="/presentation"
-        label="presentation"      
+        label="Presentation"   
+        icon="info"   
     />
         <q-btn :class="{hidden:plots}"
         align="around"
@@ -49,7 +49,9 @@
         color="orange-14"
         text-color="white"
         to="/"
-        label=" scatter plot "      
+        no-caps
+        label="Scatter plots"  
+        icon="scatter_plot"       
     />
     </div>
 
