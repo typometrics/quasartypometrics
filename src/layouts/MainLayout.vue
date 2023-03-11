@@ -16,7 +16,7 @@
           <q-icon class="text-dark" size="md">
               <img src="~assets/typometrics.svg" />
             </q-icon>
-          Typometrics
+          &nbsp;<b>Typometrics</b>
           
 
         </q-toolbar-title>

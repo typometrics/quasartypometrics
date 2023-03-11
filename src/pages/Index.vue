@@ -630,7 +630,6 @@ export default {
                   })
         .then(response => {
             this.nblang = response.data.nblang;
-            console.log(this.nblang);
             this.xymax = response.data.xymax;
             this.xlimMin = response.data.xlimMin;
             this.freqMax = response.data.freqMax;
@@ -639,27 +638,32 @@ export default {
               color: "positive",
               position: "bottom"
             });
+            console.log(1010,response.data.chartdata)
+            if (this.chartdata) // copy into old data to get the dots moving
+              {
+                const lang2data = response.data.chartdata.reduce(function(result, item) {
+                    result[item.label[0]] = item; return result}, {});
+            console.log(222,this.lang2data)
+                for (let [index, la] of this.chartdata.entries()) {
+                  if (la.label[0] in lang2data) {
+                    la.data = lang2data[la.label[0]].data;
+                    delete lang2data[la.label[0]];
+                  }
+                  else this.chartdata.splice(index,1)
+                }
+                //console.log("lang2data",lang2data)
+                for (var la in lang2data)
+                {
+                  console.log("la",la);
+                  this.chartdata.push(lang2data[la])
+                }
+              }
+            else this.chartdata = response.data.chartdata;  
+            // console.log(1111,response.data.chartdata)
+            response.data.chartdata[0]['label'][0]='aaaa'
+            console.log(1111,response.data.chartdata[0]['label'])
+            console.log(11111,response.data.chartdata[0]['label'][0])
             
-            // if (this.chartdata) // copy into old data to get the dots moving
-            //   {
-            //     const lang2data = response.data.chartdata.reduce(function(result, item) {
-            //         result[item.label[0]] = item; return result}, {});
-
-            //     for (let [index, la] of this.chartdata.entries()) {
-            //       if (la.label[0] in lang2data) {
-            //         la.data = lang2data[la.label[0]].data;
-            //         delete lang2data[la.label[0]];
-            //       }
-            //       else this.chartdata.splice(index,1)
-            //     }
-            //     //console.log("lang2data",lang2data)
-            //     for (var la in lang2data)
-            //     {
-            //       //console.log("la",la);
-            //       this.chartdata.push(lang2data[la])
-            //     }
-            //   }
-            // else this.chartdata = response.data.chartdata;  
             this.chartdata = response.data.chartdata;  
             this.drawit();
           })
@@ -688,6 +692,7 @@ export default {
             this.$q.notify({
               message: `That worked! Check out the cloud of`+ nblang+` languages!`, color: "positive", position: "bottom"
             });
+            console.log(6666,this.closeChartdata)
             if (this.closeChartdata) // copy into old data to get the dots moving
               {
                 const lang2data = response.data.chartdata.reduce(function(result, item) {
@@ -703,11 +708,13 @@ export default {
                 console.log(lang2data)
                 for (var la in lang2data)
                 {
-                  console.log(la);
+                  
                   this.closeChartdata.push(lang2data[la])
                 }
+                console.log(77777,la);
               }
-            else this.closeChartdata = response.data.chartdata;  
+            else 
+            this.closeChartdata = response.data.chartdata;  
             //this.drawit();
             var disopt = (this.dimension==1)?this.getDisplayOptions(xtypes[0],xmodels[0],xtypes[0],xmodels[0],response.data.xlimMin):this.getDisplayOptions(xtypes[0],xmodels[0],xtypes[1],xmodels[1],response.data.xlimMin)
             this.$refs.bubblechart.setData(false, this.closeChartdata, disopt);
