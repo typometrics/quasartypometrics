@@ -29,10 +29,11 @@
 		/>
 
     
-    <div 
+    <div>
       <q-btn :class="{hidden:!plots}"
         align="around"
         spread
+        no-caps
         stretch
         unelevated
         color="orange-14"
@@ -92,7 +93,7 @@
  -->
 
         &nbsp;
-        &nbsp;<div>&nbsp;Typometrics v{{ 1.0 }}</div>
+        &nbsp;<div>&nbsp;Typometrics v1.0</div>
       </q-toolbar>
     </q-header>
 <!-- show-if-above -->
@@ -188,8 +189,8 @@ export default {
           link: 'https://github.com/typometrics'
         },
         {
-          title: 'presentation',
-          caption: 'presentation of typometrics',
+          title: 'Presentation',
+          caption: 'Presentation of typometrics',
           icon: 'chat',
           link: '#/presentation'
         },
