@@ -59,9 +59,14 @@
       in the<a href = "http://surfacesyntacticud.github.io/" class = "link"> Surface-Syntactic scheme (SUD)</a> 
       and the standard UD format. We provide one-dimensional and two-dimensional plots.
       <br/><br/>
-      Currently, with UD version 2.8, there are 114 languages (half of which are Indo-European) and 5 types of measures:<br/>
-      <p style = "text-decoration: underline;text-align: center;">direction, distance, distribution, tree height, and Menzerath</p> Each type of measure consists of a list of measures. 
-      For example, the distance measure type contains the global average of the distance of all relations for a given language L. 
+      Currently, with UD version 2.11, there are 138 languages (half of which are Indo-European) and 5 types of measures:<br/>
+      <p style = "text-decoration: underline;text-align: center;">head-initiality, distance, distribution, tree height, and Menzerath</p> 
+      
+      where <i>head-initiality</i> was proposed under the name <i>direction</i> by Gerdes et al. 2021, 
+      then renamed to head-initiality when introducing the 
+      <span style = "text-decoration: underline;">flexibility</span> measure <a href = "https://aclanthology.org/2023.depling-1.7/" class = "link"> ( Kahane et al. 2023 )</a>.
+      <br/>
+      Each type of measure consists of a list of measures. For example, the distance measure type contains the global average of the distance of all relations for a given language L. 
       The distance measure also contains the average over each specific type of dependency relations, such as the average distance of 
       the subject relation. More details on each measure type is provided in Section <span class = 'section'>Different measures</span> below.
       <br/><br/>
@@ -78,9 +83,10 @@
       <hr />
       <p>
         <h4 class = "title">Different measures</h4>
-        <h5 class = "subtitle">Direction </h5>
-        The measure “direction” shows the percentage of <b>head-initial</b> relations in a language. In other words, the percentage of relations where the head is to the left of its dependent.
-For example, the result of measurement on ‘subj’ direction of English is 7.2, which means in English, there are on average 7.2% of subjects located on the right side of the verb. Moreover, the point of English is put at 7.2 on the axis of the unidimensional diagram.
+        <h5 class = "subtitle">Head-initiality </h5>
+        The measure “head-initiality” shows the percentage of <b>head-initial</b> relations in a language. In other words, the percentage of relations where the head is to the left of its dependent.
+For example, the result of measurement on ‘subj’ head-initiality of English is 7.2, which means in English, there are on average 7.2% of subjects located on the right side of the verb. 
+Moreover, the point of English is put at 7.2 on the axis of the unidimensional diagram.
           <div class="q-pa-md q-gutter-sm row items-start">
               <q-img
                 src="~assets/directionPart.png"
@@ -88,18 +94,18 @@ For example, the result of measurement on ‘subj’ direction of English is 7.2
                 style="max-width: 400px; height: 300px;"
               >
               <div class="absolute-bottom text-subtitle2 text-center">
-                part of graph direction::subj
+                part of graph head-initiality::subj
               </div>
               </q-img>
             </div>
 
           <p><br/>
-            The standard Direction measure combines all relations of the same function name.
+            The standard Head-initiality measure combines all relations of the same function name.
              The following measure type allows for more fine-grained observations:
 
-             <h6 class = "subtitle">Direction-cfc </h6>
+             <h6 class = "subtitle">head-initiality-cfc </h6>
              “cfc” stands for category-function-category for each dependency relation consisting of head-function-dependent, e.g. the couple (She, is) in the sentence “She is happy”  is an instance of AUX-subj-PRON, where C = AUX, F = subj and
-               the dependent’s C = PRON. Similar to “direction”, “direction-cfc” measures the percentage of <b>head-initial cfc </b>relations in a language.
+               the dependent’s C = PRON. Similar to “head-initiality”, “head-initiality-cfc” measures the percentage of <b>head-initial cfc </b>relations in a language.
           </p>
         </p>
       </div>
@@ -126,7 +132,7 @@ For example, the result of measurement on ‘subj’ direction of English is 7.2
 
         </p>
          <h6 class = "subtitle">Distance-cfc </h6>
-         “cfc” means head-function-dependent, as the explanation about “direction-cfc”, “distance-cfc” interpretes the average 
+         “cfc” means head-function-dependent, as the explanation about “head-initiality-cfc”, “distance-cfc” interpretes the average 
          difference between the dependent and head in a given cfc relation in a language. For instance, “distance-cfc:AUX-subj-PRON” provides the mean distance of PRON_ID - AUX_ID.
 
           <h6 class = "subtitle">Distance-abs </h6>
@@ -229,90 +235,92 @@ We trust that further interesting phenomena can be observed on the different Men
       <h4 class = "title">Intepretation of graphs</h4>
       The measurement results are visualised on 1D and 2D scatter plots. <br/>
 One-dimensional plots allow us to visualize the distribution of the various measures we have performed on the treebanks, two-dimensional plots bring two measures in relation to one another.
+<br/>
+In this section, the term <i>direction</i> refers to <span style = "text-decoration: underline;">head-initiality</span>.
 
 
        <h5 class = "subtitle">Graph details (makers and colors ) </h5>
        <div>Languages on our scatter plots are grouped by rough language classes and represented differently with various markers and colors: 
-</div>
-<ul style = "text-indent:10px;">
-  <li>Indo-European languages: triangles</li>
-  <ul>
-  <li>
-    <div>Indo-European-Romance: brown &nbsp; 
-      <q-img
-          src="~assets/triangleBrown.png"
-          loading="lazy"
-          style="max-width: 21px; height: 21x;"/>
-          </div>
-  </li>
-  <li>
-    <div>Indo-European-Baltoslavic: purple &nbsp; 
-      <q-img
-          src="~assets/trianglePurple.png"
-          loading="lazy"
-          style="max-width: 19px; height: 19px;"/>
-          </div>
-  </li>
-  <li> <div>Indo-European-Germanic, including the English Creole Naija: olive &nbsp; 
-    <q-img
-          src="~assets/triangleOlive.png"
-          loading="lazy"
-          style="max-width: 19px; height: 19px;"/>
-          </div>
-     </li>
-  <li><div>Other Indo-European: blue &nbsp;
-    <q-img
-          src="~assets/triangleBlue.png"
-          loading="lazy"
-          style="max-width: 18px; height: 18px;"/>
-          </div>
-  </li>
-  </ul>
-<br/>
-  <li><div>Sino-Austronesian: limeGreen star &nbsp;
-    <q-img
-          src="~assets/greenStar.png"
-          loading="lazy"
-          style="max-width: 22px; height: 22px;"/>
-          </div>
-    </li>
-  <li> <div>Agglutinating languages: red plus signs 
-    <q-img
-          src="~assets/plusRed.png"
-          loading="lazy"
-          style="max-width: 24px; height: 24px;"/>
-          </div>
-     </li>
+        </div>
+        <ul style = "text-indent:10px;">
+          <li>Indo-European languages: triangles</li>
+          <ul>
+          <li>
+            <div>Indo-European-Romance: brown &nbsp; 
+              <q-img
+                  src="~assets/triangleBrown.png"
+                  loading="lazy"
+                  style="max-width: 21px; height: 21x;"/>
+                  </div>
+          </li>
+          <li>
+            <div>Indo-European-Baltoslavic: purple &nbsp; 
+              <q-img
+                  src="~assets/trianglePurple.png"
+                  loading="lazy"
+                  style="max-width: 19px; height: 19px;"/>
+                  </div>
+          </li>
+          <li> <div>Indo-European-Germanic, including the English Creole Naija: olive &nbsp; 
+            <q-img
+                  src="~assets/triangleOlive.png"
+                  loading="lazy"
+                  style="max-width: 19px; height: 19px;"/>
+                  </div>
+            </li>
+          <li><div>Other Indo-European: blue &nbsp;
+            <q-img
+                  src="~assets/triangleBlue.png"
+                  loading="lazy"
+                  style="max-width: 18px; height: 18px;"/>
+                  </div>
+          </li>
+          </ul>
+        <br/>
+          <li><div>Sino-Austronesian: limeGreen star &nbsp;
+            <q-img
+                  src="~assets/greenStar.png"
+                  loading="lazy"
+                  style="max-width: 22px; height: 22px;"/>
+                  </div>
+            </li>
+          <li> <div>Agglutinating languages: red plus signs 
+            <q-img
+                  src="~assets/plusRed.png"
+                  loading="lazy"
+                  style="max-width: 24px; height: 24px;"/>
+                  </div>
+            </li>
 
-  <li>
-    <div> Afroasiatic and Semitic': orange X signs&nbsp;
-    <q-img
-          src="~assets/xorange.png"
-          loading="lazy"
-          style="max-width: 21px; height: 21px;"/>
-          </div>
-    </li>
-  <li><div>Tupian: grey star &nbsp;
-    <q-img
-          src="~assets/greyStar.png"
-          loading="lazy"
-          style="max-width: 22px; height: 22px;"/>
-          </div>
-    </li>
+          <li>
+            <div> Afroasiatic and Semitic': orange X signs&nbsp;
+            <q-img
+                  src="~assets/xorange.png"
+                  loading="lazy"
+                  style="max-width: 21px; height: 21px;"/>
+                  </div>
+            </li>
+          <li><div>Tupian: grey star &nbsp;
+            <q-img
+                  src="~assets/greyStar.png"
+                  loading="lazy"
+                  style="max-width: 22px; height: 22px;"/>
+                  </div>
+            </li>
 
-<br/>
-<li>
-  <div>Other languages : black circles  &nbsp;
-    <q-img
-          src="~assets/ptsBlack.png"
-          loading="lazy"
-          style="max-width: 19px; height: 19px;"/>
-          </div>
-  
-The language families of these languages contain less than 5 languages in our dataset, such as Niger-Congo and Dravidian languages as well as Basque
-</li>
+        <br/>
+        <li>
+          <div>Other languages : black circles  &nbsp;
+            <q-img
+                  src="~assets/ptsBlack.png"
+                  loading="lazy"
+                  style="max-width: 19px; height: 19px;"/>
+                  </div>
+          
+        The language families of these languages contain less than 5 languages in our dataset, such as Niger-Congo and Dravidian languages as well as Basque
+        </li>
 
-</ul>
+        </ul>
        <h5 class = "subtitle">Interpretation </h5>
         <div><b>unidimensional graph</b><br/>
         For example, on the 1D diagram “direction: subj”, most language points are located on the left of axes, with percentages less than 50%, which means that subjects of most languages in our dataset prefer head-initial than head-final.
@@ -358,7 +366,8 @@ The position of a language point depends on the analysis results of this languag
               </q-img>
             </div>
   </div>
-  Some of the language clouds have specific recognizable geometric forms, such as for the following graph  (Figure2 of the typometrics article Gerdes et al. 2021) that shows the percentage of pronominal versus nominal objects on the right of the verb:, we can recognize a triangle pattern.
+  Some of the language clouds have specific recognizable geometric forms, such as for the following graph  
+  (Figure2 of the typometrics article Gerdes et al. 2021) that shows the percentage of pronominal versus nominal objects on the right of the verb:, we can recognize a triangle pattern.
 
   <br/><br/>
   As we can see, in this figure, y &#62; x is almost true, therefore, we can conclude that for almost every language, the percentage of nominal objects on the right of its verbs is more than that of pronominal objects following a verb as its governor.  
@@ -385,12 +394,14 @@ The position of a language point depends on the analysis results of this languag
       <div id = "similarity">
         <hr/>
       <h4 class = "title" >Similarity measures </h4>
-      First and foremost, we divide measures mentioned above in five groups in consideration of their different natures:<br/>
-the groups “distance” and “direction”:
-“distance”: distance, distance-abs, distance-cfc<br/>
-“direction”: direction, direction-cfc<br/>
-as well as the groups “distribution”, “menzerath”, “treeHeight”.<br/>
-In each group, we compute distances between each pair of scatter plots and try to find the most similar graph for every graph under different types of similarity measures. 
+      First and foremost, we divide measures mentioned above in five groups in consideration of their different natures, also in this section <i>direction</i> refers to
+      <span style = "text-decoration: underline;">head-initiality</span>.:
+      <br/>
+      the groups “distance” and “direction”:
+      “distance”: distance, distance-abs, distance-cfc<br/>
+      “direction”: direction, direction-cfc<br/>
+      as well as the groups “distribution”, “menzerath”, “treeHeight”.<br/>
+      In each group, we compute distances between each pair of scatter plots and try to find the most similar graph for every graph under different types of similarity measures. 
 
 <h6 class = "subtitle">Movement of language points:</h6>
       <div>We call “distribution distance” the distance between the cloud points of two graphs (named graph1 and graph2) in the sense of language points distributions. In other words, if we want to form graph2 with points in graph1 and take language names into account, distribution_distance(graph1, graph2) is the average Euclidean distance that points in graph1 should move.
@@ -486,9 +497,11 @@ Let’s call this distance distDTW(graph1, graph2), first of all we need to calc
          1. Gerdes K. & Kahane S. & Chen X., (2021) <i>“Typometrics: From Implicational to Quantitative Universals in Word Order Typology”</i>, Glossa: a journal of general linguistics 6(1), p.17. doi: https://doi.org/10.5334/gjgl.764
 <br/>2. Chen X., Gerdes K., Kahane S., Courtin M. (2021) <i>The Co-Effect of Menzerath-Altmann Law and Heavy Constituent Shift in Natural Languages</i>. Qualico.
 <br/>
-3. Code of typometrics project:<a href = "https://github.com/typometrics" class = "link"> https://github.com/typometrics</a> <br/>
-4. Stable Matchings in Metric Spaces: <a href = "https://arxiv.org/pdf/1710.05262.pdf" class = "link"> https://arxiv.org/pdf/1710.05262.pdf</a> <br/>
-5. Dynamic time warping:<a href = "https://github.com/talcs/simpledtw" class = "link"> https://github.com/talcs/simpledtw </a><br/>
+3. Sylvain Kahane, Ziqian Peng, and Kim Gerdes. 2023. Word order flexibility: a typometric study. 
+In Proceedings of the Seventh International Conference on Dependency Linguistics (Depling, GURT/SyntaxFest 2023), pages 68–80, Washington, D.C.. Association for Computational Linguistics.
+4. Code of typometrics project:<a href = "https://github.com/typometrics" class = "link"> https://github.com/typometrics</a> <br/>
+5. Stable Matchings in Metric Spaces: <a href = "https://arxiv.org/pdf/1710.05262.pdf" class = "link"> https://arxiv.org/pdf/1710.05262.pdf</a> <br/>
+6. Dynamic time warping:<a href = "https://github.com/talcs/simpledtw" class = "link"> https://github.com/talcs/simpledtw </a><br/>
 <br/><br/>
 </div>
       </div>
@@ -573,7 +586,7 @@ export default {
     return{
       page:'presentation',
       drawerRight:true,
-      measures:["Direction","Distance","Distribution","Tree Height","Menzerath"],
+      measures:["Head-initiality","Distance","Distribution","Tree Height","Menzerath"],
 
       sections:[
         {
@@ -588,7 +601,7 @@ export default {
         },
         {
           id:"measures",
-          name:"Direction",
+          name:"Head-initiality",
           act:false
         },
         {
