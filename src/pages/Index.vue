@@ -387,7 +387,7 @@ export default {
           return true;
         }
         
-        var isFlex = (this.xtypemodel=='flexibility' || this.xtypemodel=='flexibility-cfc'||this.xtypemodel=='flex_compare_Bakker')
+        var isFlex = (this.xtypemodel=='flexibility' || this.xtypemodel=='flexibility-cfc'||this.xtypemodel=='flex_compare_Bakker');
         var isInf = (this.scheme == 'UD' && (this.xmodel.slice(0,2)=='nb'||(this.xtypemodel=='distribution'&& this.xmodel=='total')));        
         return isInf || (this.xtypemodel=='treeHeight' || this.ytypemodel == 'treeHeight') || isFlex;
 
