@@ -1,6 +1,6 @@
 # Typometrics (typometrics)
 
-A Quasar Framework app
+Colorful Quantitative Typology
 
 ## Install the dependencies
 ```bash

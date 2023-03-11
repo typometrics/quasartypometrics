@@ -2,13 +2,16 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="19.154699mm"
-   height="17.193781mm"
-   viewBox="0 0 19.154699 17.193781"
+   width="20mm"
+   height="20mm"
+   viewBox="0 0 20 20"
    version="1.1"
    id="svg3706"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="typometrics.svg"
+   inkscape:export-filename="/media/kim/sam/work/typometrics/quasartypometrics/src/assets/typometrics.png"
+   inkscape:export-xdpi="865.71997"
+   inkscape:export-ydpi="865.71997"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -49,35 +52,35 @@
     <circle
        style="fill:#2a3cff;fill-opacity:0.643137;stroke:#ffffff;stroke-width:0.0108096px;-inkscape-stroke:none;stop-color:#000000"
        id="circle2638"
-       cx="185.63609"
-       cy="186.95088"
+       cx="186.09294"
+       cy="188.65956"
        r="2.8571017" />
     <circle
-       style="fill:#2ae7ff;fill-opacity:0.83084816;stroke:#ffffff;stroke-width:0.0108096px;-inkscape-stroke:none;stop-color:#000000"
+       style="fill:#2ae7ff;fill-opacity:0.830848;stroke:#ffffff;stroke-width:0.0108096px;-inkscape-stroke:none;stop-color:#000000"
        id="circle2734"
-       cx="178.87094"
-       cy="191.96661"
+       cx="179.32779"
+       cy="193.67529"
        r="2.8571017"
        inkscape:transform-center-x="5.1317664"
        inkscape:transform-center-y="-7.3292227" />
     <rect
-       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#880ae5;fill-opacity:0.89068145;stroke:#ffffff;stroke-width:0.0108096px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+       style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#880ae5;fill-opacity:0.890681;stroke:#ffffff;stroke-width:0.0108096px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
        id="rect8278"
        width="4.6589999"
        height="4.6589999"
-       x="169.50394"
-       y="184.29552" />
+       x="169.96078"
+       y="186.0042" />
     <circle
        style="fill:#afff2a;fill-opacity:0.799474;stroke:#ffffff;stroke-width:0.0108096px;-inkscape-stroke:none;stop-color:#000000"
        id="circle2875"
-       cx="176.14369"
-       cy="187.15352"
+       cx="176.60054"
+       cy="188.8622"
        r="2.8571017" />
     <circle
        style="fill:#ff8c00;fill-opacity:0.797736;stroke:#ffffff;stroke-width:0.0108096px;-inkscape-stroke:none;stop-color:#000000"
        id="circle3039"
-       cx="180.21118"
-       cy="187.48303"
+       cx="180.66803"
+       cy="189.19171"
        r="2.8571017" />
     <path
        sodipodi:type="star"
@@ -93,7 +96,7 @@
        sodipodi:arg2="1.6930825"
        inkscape:rounded="0"
        inkscape:randomized="0"
-       transform="matrix(0.16139218,0,0,-0.16139218,147.66017,190.62621)"
+       transform="matrix(0.16139218,0,0,-0.16139218,148.11702,192.33489)"
        inkscape:transform-center-x="0.19592123"
        inkscape:transform-center-y="0.62741576"
        d="M 202.04976,39.705018 167.83218,35.499696 188.58288,7.9690623 Z" />
@@ -111,7 +114,7 @@
        sodipodi:arg2="1.6930825"
        inkscape:rounded="0"
        inkscape:randomized="0"
-       transform="matrix(0.16139218,0,0,0.16139218,149.62997,190.72724)"
+       transform="matrix(0.16139218,0,0,0.16139218,150.08682,192.43592)"
        inkscape:transform-center-x="0.19592123"
        inkscape:transform-center-y="-0.62741697"
        d="M 202.04976,39.705018 167.83218,35.499696 188.58288,7.9690623 Z" />
@@ -120,7 +123,7 @@
        id="rect8414"
        width="4.6589999"
        height="4.6589999"
-       x="176.54459"
-       y="196.61775" />
+       x="177.00143"
+       y="198.32643" />
   </g>
 </svg>

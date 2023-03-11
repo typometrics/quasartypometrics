@@ -21,7 +21,11 @@
 
         </q-toolbar-title>
         <q-toolbar-title :class="{hidden:plots}">
-          Typometrics presentation
+          <q-icon class="text-dark" size="md">
+              <img src="~assets/typometrics.svg" />
+            </q-icon>
+          &nbsp;<b>Typometrics presentation</b>
+          
         </q-toolbar-title>
 <!-- <q-space /><q-space /><q-space /><q-space /><q-space />"column q-gutter-lg col-2 bg-white hidden":-->
 
@@ -43,15 +47,15 @@
         unelevated
         text-color="white"
         to="/presentation"
-        label="Presentation"   
-        icon="info"   
-    />
+        icon="info" 
+    >
+    <q-tooltip class="bg-white">A short presentation of the Typometrics website</q-tooltip>
+    </q-btn>
         <q-btn :class="{hidden:plots}"
         align="around"
         spread
         stretch
         unelevated
-        color="orange-14"
         text-color="white"
         to="/"
         no-caps
@@ -97,10 +101,11 @@
         </q-list>
       </q-btn-dropdown>
       <q-separator dark vertical />
+       &nbsp;
+        &nbsp;<div>&nbsp;Typometrics v1.0</div>
  -->
 
-        &nbsp;
-        &nbsp;<div>&nbsp;Typometrics v1.0</div>
+       
       </q-toolbar>
     </q-header>
 <!-- show-if-above -->
@@ -122,6 +127,15 @@
           :key="link.title"
           v-bind="link"
         />
+        <q-item-label
+        >
+      </q-item-label>
+        <q-item-label
+        header
+          class="text-grey-8"
+        >
+        Typometrics v. 1.0
+      </q-item-label>
       </q-list>
     </q-drawer>
 
@@ -196,7 +210,7 @@ export default {
           link: 'https://github.com/typometrics'
         },
         {
-          title: 'Presentation',
+         title: 'Presentation',
           caption: 'Presentation of typometrics',
           icon: 'chat',
           link: '#/presentation'
