@@ -29,3 +29,18 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 The server has to point to 	/home/typometrics/quasartypometrics/dist/spa;
 
 check deployment/djangocloeditor for an nginx configuration
+
+### trouble shooting
+if the `quasar dev` fails with weird JSON parsing errors, you might want to check the npm and node version:
+```
+$ npm -v
+8.5.0
+$ node -v
+v16.14.2
+```
+
+```
+npm install npm@9.6.1 -g
+nvm use 16
+```
+might do the job.
