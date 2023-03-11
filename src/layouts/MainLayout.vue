@@ -13,7 +13,12 @@
         />
 
         <q-toolbar-title :class="{hidden:!plots}">
+          <q-icon class="text-dark" size="md">
+              <img src="~assets/typometrics.svg" />
+            </q-icon>
           Typometrics
+          
+
         </q-toolbar-title>
         <q-toolbar-title :class="{hidden:plots}">
           Typometrics presentation
