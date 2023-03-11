@@ -1,5 +1,6 @@
 <template>
   <q-page class="full-width row no-wrap justify-around items-start content-between q-col-gutter-lg" >
+
     <div class="">
       <div class="col-2" style= "position: relative;"  >
 		  
@@ -8,12 +9,11 @@
 
     </div>
     
+    <q-spinner-pie class="fixed-center" color="primary" size="10em" :class="{ hidden : !loading }" :thickness="10"/>
 
     <div class="col-2 self-center">
-		<q-spinner color="primary" size="10em" :class="{ hidden : !loading }" :thickness="10"/>
+		
       <div class="column q-col-gutter-lg">
-          <!-- <div class="q-pa-md"> -->
-        <!-- <q-form @submit="showIt" class="q-gutter-md"> -->
         <q-form class="q-gutter-md">
           <div class="column q-gutter-lg  justify-center">
                   <q-space />
