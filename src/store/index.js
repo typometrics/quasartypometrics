@@ -33,21 +33,31 @@ export default function (/* { ssrContext } */) {
 	state: {
 		sche: 0,
     showPlot: true,
-    showCloseGraph:false,
+    showCloseGraph: false,
+    showLanguageSelector: false,
+    showLanguageButton: false,
 	  },
 	mutations: {
 		changeSchema (state, sche) {
 		  state.sche=sche;
-		  console.log(78787,"ttt", state.sche, this)
+		  // console.log(78787,"ttt", state.sche, this)
 		},
     setPage(state, showPlot){
       state.showPlot =showPlot;
-      console.log("store showplot", showPlot); 
+      // console.log("store showplot", showPlot); 
     },
-    showCloseGr(state,showGr){
+    showCloseGr(state, showGr){
       state.showCloseGraph = showGr;
-      console.log("store showCloseGraph", showGr); 
-    }
+      // console.log("store showCloseGraph", showGr); 
+    },
+    showHideLanguageSelector(state, tf) {
+      state.showLanguageSelector = tf;
+      // console.log("store showLanguageSelector", tf); 
+    },
+    showHideLanguageButton(state, tf) {
+      state.showLanguageButton = tf;
+      // console.log("store showLanguageButton", tf); 
+    },
 
 	},
 

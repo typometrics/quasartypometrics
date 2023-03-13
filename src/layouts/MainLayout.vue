@@ -1,74 +1,82 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-         <!-- class="bg-primary text-white q-my-md "> -->
+    <q-header>
+      <q-toolbar dense>
+        <!-- class="bg-primary text-white q-my-md "> -->
         <q-btn
           flat
           dense
           round
           icon="menu"
-          aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
 
-        <q-toolbar-title :class="{hidden:!plots}">
+        <q-toolbar-title :class="{ hidden: !plots }">
           <q-icon class="text-dark" size="md">
-              <img src="~assets/typometrics.svg" />
-            </q-icon>
+            <img src="~assets/typometrics.svg" />
+          </q-icon>
           &nbsp;<b>Typometrics</b>
-          
-
         </q-toolbar-title>
-        <q-toolbar-title :class="{hidden:plots}">
+        <q-toolbar-title :class="{ hidden: plots }">
           <q-icon class="text-dark" size="md">
-              <img src="~assets/typometrics.svg" />
-            </q-icon>
+            <img src="~assets/typometrics.svg" />
+          </q-icon>
           &nbsp;<b>Typometrics presentation</b>
-          
         </q-toolbar-title>
-<!-- <q-space /><q-space /><q-space /><q-space /><q-space />"column q-gutter-lg col-2 bg-white hidden":-->
+        <!-- <q-space /><q-space /><q-space /><q-space /><q-space />"column q-gutter-lg col-2 bg-white hidden":-->
 
-<q-select :class="schemeStyle"
-		stretch 
-		v-model="scheme"
-		:options="schemeoptions"
-		@input="schemaChanged()"
-		label="Treebank version 2.11"
-		/>
+        <q-select
+          :class="schemeStyle"
+          stretch
+          v-model="scheme"
+          :options="schemeoptions"
+          @input="schemaChanged()"
+          label="Treebank version 2.11"
+        />
 
-    
-    <div>
-      <q-btn :class="{hidden:!plots}"
-        align="around"
-        spread
-        no-caps
-        stretch
-        unelevated
-        text-color="white"
-        to="/presentation"
-        icon="info" 
-    >
-    <q-tooltip class="bg-white">A short presentation of the Typometrics website</q-tooltip>
-    </q-btn>
-        <q-btn :class="{hidden:plots}"
-        align="around"
-        spread
-        stretch
-        unelevated
-        text-color="white"
-        to="/"
-        no-caps
-        label="Scatter plots"  
-        icon="scatter_plot"       
-    />
-    </div>
+        <div>
+          <q-btn
+            :class="{ hidden: !plots }"
+            align="around"
+            spread
+            no-caps
+            stretch
+            unelevated
+            text-color="white"
+            to="/presentation"
+            icon="info"
+          >
+            <q-tooltip class="bg-white"
+              >A short presentation of the Typometrics website</q-tooltip
+            >
+          </q-btn>
+          <q-btn
+            :class="{ hidden: plots }"
+            align="around"
+            spread
+            stretch
+            unelevated
+            text-color="white"
+            to="/"
+            no-caps
+            label="Scatter plots"
+            icon="scatter_plot"
+          />
+          <q-btn
+            flat
+            dense
+            round
+            icon="language"
+            @click="languageButtonClicked"
+            :style="{ visibility: showLanguageButton ? 'visible' : 'hidden' }"
+          >
+            <q-tooltip>Select which languages to show in the plot</q-tooltip>
+          </q-btn>
+        </div>
 
+        <!-- <q-space /> -->
 
-<!-- <q-space /> -->
-	
-	  
-<!-- 
+        <!-- 
 <q-btn-dropdown stretch flat label="Dropdown">
         <q-list>
           <q-item-label header>Folders</q-item-label>
@@ -104,22 +112,23 @@
        &nbsp;
         &nbsp;<div>&nbsp;Typometrics v1.0</div>
  -->
-
-       
       </q-toolbar>
     </q-header>
-<!-- show-if-above -->
+    <!-- show-if-above -->
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
     <q-drawer
       v-model="leftDrawerOpen"
-      
+      overlay
       bordered
+      elevated
       content-class="bg-grey-1"
+      @click="leftDrawerOpen = !leftDrawerOpen"
     >
       <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
+        <q-item-label header class="text-grey-8">
           Essential Links
         </q-item-label>
         <EssentialLink
@@ -127,131 +136,99 @@
           :key="link.title"
           v-bind="link"
         />
-        <q-item-label
-        >
-      </q-item-label>
-        <q-item-label
-        header
-          class="text-grey-8"
-        >
-        Typometrics v. 1.0
-      </q-item-label>
+        <q-item-label> </q-item-label>
+        <q-item-label header class="text-grey-8">
+          Typometrics v. 1.0
+        </q-item-label>
       </q-list>
     </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink.vue'
+import EssentialLink from "components/EssentialLink.vue";
 import api from "../boot/backend-api";
 
-
 export default {
-  name: 'MainLayout',
+  name: "MainLayout",
 
   components: {
-    EssentialLink
+    EssentialLink,
   },
-	// mounted() {
-	// 	console.log(888888,this.scheme,this.$store)
-	// },
-  computed:{
-    plots(){
-      console.log("========== ",this.$store.state.showPlot);
-      this.schemeStyle = this.$store.state.showPlot?"column q-gutter-lg col-2 bg-white ":"column q-gutter-lg col-2 bg-white hidden";
+  // mounted() {
+  // 	console.log(888888,this.scheme,this.$store)
+  // },
+  computed: {
+    plots() {
+      // console.log("========== ", this.$store.state.showPlot);
+      this.schemeStyle = this.$store.state.showPlot
+        ? "column q-gutter-lg col-2 bg-white "
+        : "column q-gutter-lg col-2 bg-white hidden";
       return this.$store.state.showPlot;
-    }
-
+    },
+    showLanguageButton() {
+      return this.$store.state.showLanguageButton;
+    },
   },
-	methods: {
-		schemaChanged(sche) {
-      api
-     .changeScheme({sche :this.scheme})
-     .then(response => {
-        console.log("current scheme: "+ this.scheme," ", response.data.change);
-     })
-    this.$store.commit('showCloseGr', false); //hide the canvas for similar graph
-		this.$store.commit('changeSchema', this.scheme); //change scheme between 'UD' and 'SUD'
+  methods: {
+    schemaChanged(sche) {
+      api.changeScheme({ sche: this.scheme }).then((response) => {
+        console.log(
+          "current scheme: " + this.scheme,
+          " ",
+          response.data.change
+        );
+      });
+      this.$store.commit("showCloseGr", false); //hide the canvas for similar graph
+      this.$store.commit("changeSchema", this.scheme); //change scheme between 'UD' and 'SUD'
+    },
+    languageButtonClicked() {
+      this.$store.commit(
+        "showHideLanguageSelector",
+        !this.$store.state.showLanguageSelector
+      );
+    },
+  },
 
-		},
-
-	},
-
-    data () {
-    console.log("current page ", this.$route);
-
-    const defaulSche = 'SUD';
-    api
-     .changeScheme({sche :defaulSche})
-     .then(response => {
-          console.log("refrech page with default scheme: "+ defaulSche," ", response.data.change);
-     }) 
+  data() {
+    // console.log("current page ", this.$route);
+    const defaulSche = "SUD";
+    api.changeScheme({ sche: defaulSche }).then((response) => {
+      console.log(
+        "refrech page with default scheme: " + defaulSche,
+        " ",
+        response.data.change
+      );
+    });
     return {
-		scheme: defaulSche,
-		schemeoptions:['SUD', 'UD'],
-		leftDrawerOpen: false,
-    schemeStyle:"column q-gutter-lg col-2 bg-white",
-    webTitle:"Typometrics",
-		essentialLinks: [
+      scheme: defaulSche,
+      schemeoptions: ["SUD", "UD"],
+      leftDrawerOpen: false,
+      schemeStyle: "column q-gutter-lg col-2 bg-white",
+      webTitle: "Typometrics",
+      essentialLinks: [
         {
-          title: 'Typometrics article',
-          caption: 'Glossa',
-          icon: 'school',
-          link: 'https://www.glossa-journal.org/articles/10.5334/gjgl.764/'
+          title: "Typometrics article",
+          caption: "Glossa",
+          icon: "school",
+          link: "https://www.glossa-journal.org/articles/10.5334/gjgl.764/",
         },
         {
-          title: 'Github',
-          caption: 'github.com/typometrics',
-          icon: 'code',
-          link: 'https://github.com/typometrics'
+          title: "Github",
+          caption: "github.com/typometrics",
+          icon: "code",
+          link: "https://github.com/typometrics",
         },
         {
-         title: 'Presentation',
-          caption: 'Presentation of typometrics',
-          icon: 'chat',
-          link: '#/presentation'
+          title: "Presentation",
+          caption: "Presentation of typometrics",
+          icon: "chat",
+          link: "#/presentation",
         },
-
-        //SUD: https://surfacesyntacticud.github.io/
-        //UD: https://universaldependencies.org/ 
-        // {
-        //   title: 'Discord Chat Channel',
-        //   caption: 'chat.quasar.dev',
-        //   icon: 'chat',
-        //   link: 'https://chat.quasar.dev'
-        // },
-        // {
-        //   title: 'Forum',
-        //   caption: 'forum.quasar.dev',
-        //   icon: 'record_voice_over',
-        //   link: 'https://forum.quasar.dev'
-        // },
-        // {
-        //   title: 'Twitter',
-        //   caption: '@quasarframework',
-        //   icon: 'rss_feed',
-        //   link: 'https://twitter.quasar.dev'
-        // },
-        // {
-        //   title: 'Facebook',
-        //   caption: '@QuasarFramework',
-        //   icon: 'public',
-        //   link: 'https://facebook.quasar.dev'
-        // },
-        // {
-        //   title: 'Quasar Awesome',
-        //   caption: 'Community Quasar projects',
-        //   icon: 'favorite',
-        //   link: 'https://awesome.quasar.dev'
-        // }
-      ]
-    
-    }
-  }
-  
-}
+      ],
+    };
+  },
+};
 </script>
+
+<style></style>
