@@ -497,6 +497,7 @@ export default {
         cadetBlue: "teal-4",
       },
       languages: [],
+      languageGroups: [],
       languageTree: [],
       labelTree: [],
       selectedLanguages: ref([]),
@@ -619,8 +620,7 @@ export default {
     toggleLanguageDrawer() {
       this.$store.commit("showHideLanguageSelector", false);
     },
-    applyLanguageSelection() {
-      this.toggleLanguageDrawer();
+    computeSelectedChartData() {
       this.selectedChartData = this.chartdata
         .filter((la) =>
           this.selectedLanguages.includes(la.label[0].split("/")[0])
@@ -633,44 +633,45 @@ export default {
             : "";
           return la;
         });
+    },
+    applyLanguageSelection() {
+      this.toggleLanguageDrawer();
+      this.computeSelectedChartData();
       this.drawit();
     },
     languageList2Trees() {
-      const languageGroups = this.languages.reduce((result, language) => {
-        (result[language.group]
-          ? result[language.group]
-          : (result[language.group] = [])
-        ).push({
-          label: language.label,
-          icon: this.pointStyle2Icon[language.pointStyle],
-          color: this.color2color[language.color] || language.color,
-        });
-        return result;
-      }, {});
       const allLanguages = {
         label: "All Languages",
         icon: "language",
         color: "primary",
-        children: Object.entries(languageGroups).map(([group, languages]) => ({
-          label: group,
-          children: languages,
-          icon: languages[0].icon,
-          color: languages[0].color,
-        })),
+        children: Object.entries(this.languageGroups).map(
+          ([group, languages]) => {
+            // console.log(222, group, languages);
+            return {
+              label: group,
+              children: languages,
+              icon: languages[0].icon,
+              color: languages[0].color,
+            };
+          }
+        ),
       };
       const allLanguageLabels = {
         label: "All Language Labels",
         icon: "abc",
         color: "primary",
-        children: Object.entries(languageGroups).map(([group, languages]) => ({
-          label: group,
-          children: languages,
-          icon: languages[0].icon,
-          color: languages[0].color,
-        })),
+        children: Object.entries(this.languageGroups).map(
+          ([group, languages]) => ({
+            label: group,
+            children: languages,
+            icon: languages[0].icon,
+            color: languages[0].color,
+          })
+        ),
       };
       this.languageTree = [allLanguages];
       this.labelTree = [allLanguageLabels];
+      console.log(111, this.languageTree);
     },
 
     updateSimilarGraph(version) {
@@ -927,25 +928,49 @@ export default {
             position: "bottom",
           });
           if (this.chartdata) {
-            // copy into old data to get the dots moving
-            const lang2data = response.data.chartdata.reduce(function (
-              result,
-              item
-            ) {
-              result[item.label[0]] = item;
-              return result;
-            },
-            {});
-            for (let [index, la] of this.chartdata.entries()) {
-              if (la.label[0] in lang2data) {
-                la.data = lang2data[la.label[0]].data;
-                delete lang2data[la.label[0]];
-              } else this.chartdata.splice(index, 1);
+            // Loop through response.data.chartdata
+            response.data.chartdata.forEach((chartDataItem) => {
+              const chartDataLanguage = chartDataItem.label[0];
+
+              // Check if language exists in this.chartdata
+              const languageIndex = this.chartdata.findIndex(
+                (lang) => lang.label[0] === chartDataLanguage
+              );
+
+              if (languageIndex !== -1) {
+                // Language exists in this.chartdata, copy data array
+                // this.chartdata[languageIndex].data = chartDataItem.data;
+                this.chartdata[languageIndex].data = JSON.parse(
+                  JSON.stringify(chartDataItem.data)
+                );
+              } else {
+                // Language doesn't exist in this.chartdata, add chartDataItem to this.chartdata
+                this.chartdata.push(JSON.parse(JSON.stringify(chartDataItem)));
+              }
+            });
+
+            // Loop through this.chartdata and remove languages that don't exist in response.data.chartdata
+            for (let i = this.chartdata.length - 1; i >= 0; i--) {
+              const chartDataLanguage = this.chartdata[i].label[0];
+
+              const responseLanguageIndex = response.data.chartdata.findIndex(
+                (lang) => lang.label[0] === chartDataLanguage
+              );
+
+              if (responseLanguageIndex === -1) {
+                // Language doesn't exist in response.data.chartdata, remove from this.chartdata
+                this.chartdata.splice(i, 1);
+              }
             }
-            for (var la in lang2data) {
-              this.chartdata.push(lang2data[la]);
-            }
-          } else this.chartdata = response.data.chartdata;
+          } else this.chartdata = response.data.chartdata; // if i don't have an old chartdata, i make a first one.
+          console.log(
+            "===1",
+            response.data.chartdata.length == this.chartdata.length,
+            response.data.chartdata.length,
+            this.chartdata.length
+            // JSON.stringify(this.chartdata)
+          );
+
           this.languages = this.chartdata.map((la) => ({
             value: la.data[0].label,
             label: la.data[0].label,
@@ -953,6 +978,27 @@ export default {
             color: la.borderColor,
             pointStyle: la.pointStyle,
           }));
+          console.log(
+            "===",
+            this.languages.length == this.chartdata.length,
+            this.languages.length,
+            this.languages
+          );
+
+          // build an object {languageGroup:[{label:languageName, ...}]} for each group and language
+          this.languageGroups = this.languages.reduce((result, language) => {
+            (result[language.group]
+              ? result[language.group]
+              : (result[language.group] = [])
+            ).push({
+              label: language.label,
+              icon: this.pointStyle2Icon[language.pointStyle],
+              color: this.color2color[language.color] || language.color,
+            });
+            return result;
+          }, {});
+
+          console.log(777, this.languageGroups["Indo-European-Baltoslavic"]);
           // initializing the selectedLanguages and selectedLabels if they are empty:
           if (this.selectedLanguages.length == 0)
             this.selectedLanguages = this.chartdata.map(
@@ -960,19 +1006,8 @@ export default {
             );
           if (this.selectedLabels.length == 0)
             this.selectedLabels = this.chartdata.map((la) => la.data[0].label);
-          this.languageList2Trees();
-          this.selectedChartData = this.chartdata
-            .filter((la) =>
-              this.selectedLanguages.includes(la.label[0].split("/")[0])
-            )
-            .map((la) => {
-              la.label[0] = this.selectedLanguages.includes(
-                la.label[0].split("/")[0]
-              )
-                ? la.label[0]
-                : "/" + la.label[0].split("/")[1];
-              return la;
-            });
+          this.languageList2Trees(); // building the this.languageTree abd this.labelTree
+          this.computeSelectedChartData();
           this.drawit();
         })
         .catch((error) => {
