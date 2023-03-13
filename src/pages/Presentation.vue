@@ -1,13 +1,10 @@
  <style>
-    .title
-    {
-        /*class 类选择器， 以 . 显示
-      background-color:rgb(242, 245, 198);
-      font-family: Arial;*/
-      color:rgb(0, 0, 102);
-      font-family:verdana;
-      
-    }
+ element {
+
+    font-family: Arial;
+
+}
+   
 
     .subtitle
     {
@@ -21,7 +18,7 @@
       
     }
     .link{
-      color:	RoyalBlue;
+      color:	rgb(230, 64, 9);
     }
     .section{
       font-style:italic;
@@ -42,7 +39,7 @@
 
     <div padding id = 'intro' >   
       <br/>
-      <h4 class = "title" >Introduction</h4>
+      <h4>Introduction</h4>
       <p >
       <h5 class = "subtitle">Definition of typometrics</h5>
 
@@ -60,7 +57,7 @@
       and the standard UD format. We provide one-dimensional and two-dimensional plots.
       <br/><br/>
       Currently, with UD version 2.11, there are 138 languages (half of which are Indo-European) and 5 types of measures:<br/>
-      <p style = "text-decoration: underline;text-align: center;">head-initiality, distance, distribution, tree height, and Menzerath</p> 
+      <h6 style = "text-align: center;">head-initiality, distance, distribution, tree height, and Menzerath</h6> 
       
       where <i>head-initiality</i> was proposed under the name <i>direction</i> by Gerdes et al. 2021, 
       then renamed to head-initiality when introducing the 
@@ -393,7 +390,7 @@ The position of a language point depends on the analysis results of this languag
 
       <div id = "similarity">
         <hr/>
-      <h4 class = "title" >Similarity measures </h4>
+      <h4>Similarity measures </h4>
       First and foremost, we divide measures mentioned above in five groups in consideration of their different natures, also in this section <i>direction</i> refers to
       <span style = "text-decoration: underline;">head-initiality</span>.:
       <br/>
@@ -481,7 +478,7 @@ Let’s call this distance distDTW(graph1, graph2), first of all we need to calc
 
       <div id = "others">
         <hr/>
-      <h4 class = "title" >Others </h4>
+      <h4>Others </h4>
         <div><b>Download</b>: use deep-orange button to download image with png format, and orange button to download points data of current graph with json format.
         </div>
         <br/>
